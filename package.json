@@ -1,0 +1,31 @@
+{
+  "name": "asker",
+  "version": "0.1.6",
+  "description": "http.request wrapper with request retries and http.Agent tuning",
+  "main": "./lib/asker.js",
+  "scripts": {
+    "test": "./node_modules/.bin/nodeunit ./test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nodules/asker.git"
+  },
+  "keywords": [
+    "http",
+    "request",
+    "client"
+  ],
+  "author": {
+    "name": "Phillip Kovalev",
+    "email": "twilightfeel@gmail.com"
+  },
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "terror": "0.2.2",
+    "extend": "1.1.3"
+  },
+  "devDependencies": {
+    "nodeunit": "0.8.x"
+  }
+}
