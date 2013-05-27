@@ -4,7 +4,7 @@
   "description": "http.request wrapper with request retries and http.Agent tuning",
   "main": "./lib/asker.js",
   "scripts": {
-    "test": "./node_modules/.bin/nodeunit ./test"
+    "test": "./node_modules/.bin/jshint --config ./.jshintrc && ./node_modules/.bin/nodeunit ./test"
   },
   "repository": {
     "type": "git",
@@ -15,23 +15,26 @@
     "request",
     "client"
   ],
-  "author": {
-    "name": "Phillip Kovalev",
-    "email": "twilightfeel@gmail.com"
-  },
+  "author": "Phillip Kovalev <twilightfeel@gmail.com> (https://github.com/kaero)",
+  "maintainers": [
+    "Phillip Kovalev <twilightfeel@gmail.com> (https://github.com/kaero)"
+  ],
   "contributors": [
+    "Ivan Lukashov <webstalk3r@gmail.com>"
+  ],
+  "licenses": [
     {
-      "name": "Ivan Lukashov",
-      "email": "webstalk3r@gmail.com"
+      "type": "MIT",
+      "url": "http://github.com/nodules/asker/raw/master/LICENSE"
     }
   ],
-  "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
     "terror": "0.2.2",
     "extend": "1.1.3"
   },
   "devDependencies": {
-    "nodeunit": "0.8.x"
+    "nodeunit": "0.8.x",
+    "jshint": "2.1.x"
   }
 }
