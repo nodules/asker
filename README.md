@@ -83,7 +83,31 @@ ask({ host: 'data-feed.local', statusFilter : filter }, function(error, response
 
 ## Connection pools tuning
 
-*todo*
+### The problem
+
+At this point of time (version `0.10` and below) node.js provides a socket pool manager that works as follows:
+
+* by default `globalAgent` is used for all outgoing http requests;
+* each `Agent` instance, including `globalAgent`, has a `maxSockets` property, which you can change;
+* socket limit is set for each unique __host-port pair__, that is served by this particular `Agent`.
+
+That is sometimes an unwanted behaviour. Let's take an example.
+
+You have two backends: `backend:3000` and `backend:4000`. First backend is indispensable for the application, but the second one is complementary. E.g., it makes http calls for the advertisements that you show later.
+
+Under heavy load this additional backend (which is usually less fault-tolerant) may occupy all sockets that OS provides for the whole `node` process, because default pool manager cares only about __host-port__ pairs. `defaultAgent` does not anyhow correct each backend' socket limit according to process limit.
+
+### Solution
+
+How `Asker` can help you manage this problem? `Asker` can create a custom instance of `http.Agent` for any given backend. And you can set up a `maxSockets` property by calculating each backend priority.
+
+### API
+
+`{Object} agent` `http.Agent` options:
+
+* `{String} name='globalAgent'` unique name for this backend
+* `{Number} maxSockets=1024` socket limit for this backend
+* `{Boolean} persistent=true` either agent would be deleted when it's last socket is removed. You can consider setting it to false, if you create agent's `name` in runtime.
 
 ## Error handling
 
