@@ -45,6 +45,21 @@ All parameters are optional.
 * `{Function} statusFilter` — status codes processing, see [Response status codes processing](#response-status-codes-processing) section for details.
 * `{Object} agent` — http.Agent options, see [Connection pools tuning](#connection-pools-tuning) section for details.
 
+## Response format
+
+Succesful requests will return data and additional information in the following format:
+
+`{Object} response`
+* `{*} data` received data
+* `{Object} meta` meta information
+    * `{Object} time` request timers
+        * `{Number} network` from socket open until the request completion
+        * `{Number} total` total execution time
+    * `{Object} options` options that you provided when created an `Asker` request
+    * `{Object} retries`
+        * `{Number} used` number of retries used
+        * `{Number} limit` retries limit for a given request
+
 ## Response status codes processing
 
 When response status code is received, `asker` passes status code through the filter function, which should determine if this response code is acceptable or not and, if not acceptable, is it necessary to retry a request.
