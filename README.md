@@ -67,7 +67,7 @@ var ask = require('asker');
 
 function filter(code) {
 		return {
-				accept : ~[200, 201, 304].indexOf(code), 
+				accept : ~[200, 201, 304].indexOf(code),
 				isRetryAllowed : 400 > code || code > 499
 		}
 }
