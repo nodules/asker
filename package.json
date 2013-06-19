@@ -20,6 +20,7 @@
     "Phillip Kovalev <twilightfeel@gmail.com> (https://github.com/kaero)"
   ],
   "contributors": [
+    "Alexey Rybakov <alexrybakov@yandex.ru> (https://github.com/flackus)",
     "Ivan Lukashov <webstalk3r@gmail.com>"
   ],
   "licenses": [
@@ -30,7 +31,7 @@
   ],
   "readmeFilename": "README.md",
   "dependencies": {
-    "terror": "0.2.2",
+    "terror": "0.2.3",
     "extend": "1.1.3"
   },
   "devDependencies": {
