@@ -205,15 +205,34 @@ module.exports = {
     */
 
     'allow gzip option and header set' : function(test) {
-        var request = new Asker({
+        var HEADERS = {
+                'accept-encoding' : 'application/json'
+            },
+
+            request = new Asker({
                 allowGzip : true,
-                headers : {
-                    'accept-encoding' : 'application/json'
-                }
+                headers : HEADERS
+            }),
+
+            requestNoGzip = new Asker({
+                allowGzip : false
+            }),
+
+            requestNoGzipWithHeaders = new Asker({
+                allowGzip : false,
+                headers : HEADERS
             });
 
-        test.strictEqual(request.options.headers['accept-encoding'], 'gzip, application/json',
+        test.strictEqual(
+            request.options.headers['accept-encoding'],
+            'gzip, ' + HEADERS['accept-encoding'],
             'add "gzip" to list of accepted encodings if gzip support enabled');
+
+        test.deepEqual(requestNoGzip.options.headers, {},
+            'do not add "accept-encoding" header if no one presents and gzip suuport disabled');
+
+        test.deepEqual(requestNoGzipWithHeaders.options.headers, HEADERS,
+            'do not add "gzip" to existing "accept-encoding" header if gzip support disabled');
 
         test.done();
     },
