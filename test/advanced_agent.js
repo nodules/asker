@@ -3,6 +3,15 @@ var http = require('http'),
     AdvancedAgent = require('../lib/advanced_agent');
 
 module.exports = {
+    tearDown : function(callback) {
+        // reset agents pools before each test
+        Object.keys(Asker.agentsPool).forEach(function(agentName) {
+            delete Asker.agentsPool[agentName];
+        });
+
+        callback();
+    },
+
     'inheritance' : function(test) {
         var agent = new AdvancedAgent();
 
@@ -25,8 +34,6 @@ module.exports = {
 
         test.strictEqual(request2.agent.options.persistent, true,
             'agent options was not overriden by second declaration');
-
-        delete Asker.agentsPool[AGENT_NAME];
 
         test.done();
     },
