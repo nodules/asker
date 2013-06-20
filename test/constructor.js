@@ -189,8 +189,6 @@ module.exports = {
         test.done();
     },
 
-    /*
-    // @todo failed now, issue #8
     'lowercase methods names' : function(test) {
         var request = new Asker({
                 method : 'post',
@@ -202,7 +200,6 @@ module.exports = {
 
         test.done();
     },
-    */
 
     'allow gzip option and header set' : function(test) {
         var HEADERS = {
