@@ -101,7 +101,6 @@ module.exports = {
         var HOST = 'yandex.com',
             PORT = 8080,
             PATH = '/index.html',
-            // @todo parsing without protocol #7
             URL = 'http://' + HOST + ':' + PORT + PATH,
 
             requestHPP = new Asker({
@@ -121,6 +120,27 @@ module.exports = {
 
         test.deepEqual(requestHPP.options, requestUrl.options,
             'options parsed from `url` and passed manually are equal');
+
+        test.done();
+    },
+
+    'url without protocol' : function(test) {
+        var HOST = 'yandex.com',
+            PATH = '/index.html',
+
+            requestHostPath = new Asker({
+                host : HOST,
+                path : PATH
+            }),
+
+            requestUrl = new Asker({
+                url : HOST + PATH
+            });
+
+        delete requestUrl.options.url;
+
+        test.deepEqual(requestUrl.options, requestHostPath.options,
+            'parsed from url and directly passed options are equal');
 
         test.done();
     },
