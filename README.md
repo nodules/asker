@@ -1,4 +1,4 @@
-# Asker
+# Asker [![Build Status](https://secure.travis-ci.org/nodules/asker.png)](http://travis-ci.org/nodules/asker)
 
 Asker is a wrapper for `http.request` method, which incorporates:
 * response deflating using gzip,
