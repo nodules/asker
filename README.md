@@ -51,6 +51,7 @@ Succesful requests will return data and additional information in the following 
 
 `{Object} response`
 * `{*} data` received data
+* `{Number} statusCode` http status code
 * `{Object} meta` meta information
     * `{Object} time` request timers
         * `{Number} network` from socket open until the request completion
