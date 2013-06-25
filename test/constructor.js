@@ -113,9 +113,8 @@ module.exports = {
 
         delete requestUrl.options.url;
 
-// issue #14
-//        assert.deepEqual(requestHPP.options, requestUrl.options,
-//            'options parsed from `url` and passed manually are equal');
+        assert.deepEqual(requestHPP.options, requestUrl.options,
+            'options parsed from `url` and passed manually are equal');
     },
 
     'url without protocol' : function() {
