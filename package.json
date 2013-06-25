@@ -4,7 +4,7 @@
   "description": "http.request wrapper with request retries and http.Agent tuning",
   "main": "./lib/asker.js",
   "scripts": {
-    "test": "./node_modules/.bin/jshint --config ./.jshintrc ./lib && ./node_modules/.bin/nodeunit ./test"
+    "test": "./node_modules/.bin/jshint --config ./.jshintrc ./lib && ./node_modules/.bin/mocha -u exports -R spec ./test"
   },
   "repository": {
     "type": "git",
@@ -35,7 +35,9 @@
     "extend": "1.1.3"
   },
   "devDependencies": {
-    "nodeunit": "0.8.x",
+    "mocha": "1.11.x",
+    "chai" : "1.7.x",
+    "vow" : "0.3.x",
     "jshint": "2.1.x"
   }
 }

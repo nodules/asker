@@ -1,9 +1,10 @@
 var http = require('http'),
     Asker = require('../lib/asker'),
-    AdvancedAgent = require('../lib/advanced_agent');
+    AdvancedAgent = require('../lib/advanced_agent'),
+    assert = require('chai').assert;
 
 module.exports = {
-    tearDown : function(callback) {
+    beforeEach : function(callback) {
         // reset agents pools before each test
         Object.keys(Asker.agentsPool).forEach(function(agentName) {
             delete Asker.agentsPool[agentName];
@@ -12,33 +13,29 @@ module.exports = {
         callback();
     },
 
-    'inheritance' : function(test) {
+    'inheritance' : function() {
         var agent = new AdvancedAgent();
 
-        test.ok(agent instanceof AdvancedAgent,
+        assert.ok(agent instanceof AdvancedAgent,
             'agent instanceof AdvancedAgent');
 
-        test.ok(agent instanceof http.Agent,
+        assert.ok(agent instanceof http.Agent,
             'agent instanceof http.Agent');
-
-        test.done();
     },
 
-    'agents pool usage' : function(test) {
+    'agents pool usage' : function() {
         var AGENT_NAME = 'smith',
             request1 = new Asker({ agent : { name : AGENT_NAME, persistent : true } }),
             request2 = new Asker({ agent : { name : AGENT_NAME, persistent : false } });
 
-        test.strictEqual(request1.agent, request2.agent,
+        assert.strictEqual(request1.agent, request2.agent,
             'agent reused from pool by name');
 
-        test.strictEqual(request2.agent.options.persistent, true,
+        assert.strictEqual(request2.agent.options.persistent, true,
             'agent options was not overriden by second declaration');
-
-        test.done();
     },
 
-    'agent persistence' : function(test) {
+    'agent persistence' : function() {
         var AGENT_NAME = 'temp',
             request = new Asker({
                 agent : {
@@ -47,21 +44,19 @@ module.exports = {
                 }
             });
 
-        test.strictEqual(request.agent, Asker.agentsPool[AGENT_NAME],
+        assert.strictEqual(request.agent, Asker.agentsPool[AGENT_NAME],
             'step #1: agent in the pool');
 
         request = null;
 
-        test.ok(Asker.agentsPool[AGENT_NAME] instanceof AdvancedAgent,
+        assert.ok(Asker.agentsPool[AGENT_NAME] instanceof AdvancedAgent,
             'step #2: agent still in the pool');
 
         Asker.agentsPool[AGENT_NAME].emit(AdvancedAgent.EVENTS.SOCKET_REMOVED);
 
-        test.strictEqual(Object.keys(Asker.agentsPool).length, 0,
+        assert.strictEqual(Object.keys(Asker.agentsPool).length, 0,
             'non-persistent agent removed from pool by "' +
                 AdvancedAgent.EVENTS.SOCKET_REMOVED +
                 '" event');
-
-        test.done();
     }
 };

@@ -1,4 +1,6 @@
-var http = require('http');
+var http = require('http'),
+    Vow = require('vow'),
+    PORT = process.env.ASKER_TEST_PORT || 10080;
 
 /**
  * @constructor
@@ -71,4 +73,41 @@ TestServer.prototype.close = function(callback) {
     return this.servant.close(callback);
 };
 
-module.exports = TestServer;
+/**
+ * Promisify all http tests, flawlessly create/close servers
+ * @param {Function} testFn test function
+ * @returns {Function}
+ */
+function httpTest(testFn) {
+    /**
+     * @param {Function} mochaDone test done callback
+     */
+    return function(mochaDone) {
+        var server;
+
+        (function() {
+            var promise = Vow.promise();
+
+            server = new TestServer(PORT++);
+            server.listen(function() {
+                promise.fulfill(server);
+            });
+
+            return promise;
+        })()
+        .then(function(server) {
+            var promise = Vow.promise();
+
+            testFn(function() {
+                promise.fulfill(server);
+            }, server);
+
+            return promise;
+        })
+        .then(function(server) {
+            server.close(mochaDone);
+        });
+    };
+}
+
+module.exports = httpTest;
