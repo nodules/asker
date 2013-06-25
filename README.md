@@ -50,7 +50,7 @@ All parameters are optional.
 Succesful requests will return data and additional information in the following format:
 
 `{Object} response`
-* `{*} data` received data
+* `{*} data` received data (if response body wasn't provided, `null` is returned)
 * `{Number} statusCode` http status code
 * `{Object} meta` meta information
     * `{Object} time` request timers

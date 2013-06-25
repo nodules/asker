@@ -33,5 +33,22 @@ module.exports = {
             done();
         });
 
+    }),
+
+    'check empty response body' : httpTest(function(done, server) {
+
+        server.addTest(function(req, res) {
+            res.statusCode = 201;
+            res.end('');
+        });
+
+        ask({ port : server.port }, function(error, response) {
+            assert.strictEqual(error, null, 'no errors occured');
+            assert.strictEqual(response.statusCode, 201, 'statusCode equals 201');
+            assert.strictEqual(response.data, null, 'response is null');
+
+            done();
+        });
+
     })
 };
