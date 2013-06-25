@@ -15,7 +15,7 @@ module.exports = {
 
             done();
         });
-    }),git st
+    }),
 
     'test response body => get => buffer' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
@@ -56,4 +56,4 @@ module.exports = {
             done();
         });
     })
-}
+};

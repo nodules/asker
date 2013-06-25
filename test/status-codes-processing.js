@@ -6,9 +6,10 @@ var Asker = require('../lib/asker'),
 
 function filter(code) {
     return {
+        /* jshint bitwise:false */
         accept : ~[200, 304, 404].indexOf(code),
         isRetryAllowed : 400 > code || code > 499
-    }
+    };
 }
 
 module.exports = {
