@@ -70,7 +70,8 @@ TestServer.prototype.buildResponse = function(isDone, message) {
  * @param {Function} callback
  */
 TestServer.prototype.close = function(callback) {
-    return this.servant.close(callback);
+    this.servant.on('close', callback);
+    return this.servant.close();
 };
 
 /**
