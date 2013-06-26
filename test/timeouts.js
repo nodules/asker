@@ -79,5 +79,50 @@ module.exports = {
                 });
         }, 100);
 
+    }),
+
+    'queue timeout => custom' : httpTest(function(done, server) {
+
+        server.addTest(function(req, res) {
+            setTimeout(function() {
+                res.statusCode = 201;
+                res.end();
+            }, 400);
+        });
+
+        server.addTest(function(req, res) {
+            setTimeout(function() {
+                res.statusCode = 201;
+                res.end();
+            }, 400);
+        });
+
+        ask({
+                port : server.port,
+                agent : {
+                    name : 'faulty',
+                    maxSockets : 1
+                }
+            },
+            function(error) {
+                assert.strictEqual(error, null, 'no errors for first request');
+            });
+
+        setTimeout(function() {
+            ask({
+                    port : server.port,
+                    queueTimeout : 1000,
+                    agent : {
+                        name : 'faulty'
+                    }
+                },
+                function(error) {
+                    assert.strictEqual(error, null, 'still no errors');
+
+                    done();
+                });
+        }, 100);
+
     })
+
 };
