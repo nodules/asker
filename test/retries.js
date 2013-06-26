@@ -94,5 +94,29 @@ module.exports = {
             done();
         });
 
+    }),
+
+    'retries => socket timeout => success' : httpTest(function(done, server) {
+
+        server.addTest(function(req, res) {
+            setTimeout(function() {
+                res.statusCode = 201;
+                res.end();
+            }, 200);
+        });
+
+        server.addTest(function(req, res) {
+            res.statusCode = 201;
+            res.end();
+        });
+
+        ask({ port : server.port, maxRetries : 1, timeout : 50 }, function(error, response) {
+            assert.strictEqual(error, null, 'no errors');
+            assert.strictEqual(response.meta.retries.used, 1, 'one retry was used');
+            assert.strictEqual(response.meta.retries.limit, 1, 'retries limit is correct');
+
+            done();
+        });
+
     })
 };
