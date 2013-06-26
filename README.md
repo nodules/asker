@@ -52,6 +52,7 @@ Succesful requests will return data and additional information in the following 
 `{Object} response`
 * `{*} data` received data (if response body wasn't provided, `null` is returned)
 * `{Number} statusCode` http status code
+* `{Object} headers` returned http headers (names are lowercased)
 * `{Object} meta` meta information
     * `{Object} time` request timers
         * `{Number} network` from socket open until the request completion
