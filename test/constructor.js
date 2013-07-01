@@ -165,8 +165,7 @@ module.exports = {
             'path and query params merging WITH overriding existing path params');
     },
 
-    // @todo issue #1
-    'POST request body building' : function() {
+    'request body building' : function() {
         var QUERY_OBJECT = {
                 world : '2',
                 rainbow : 'unicorn'
@@ -175,12 +174,10 @@ module.exports = {
             QUERY_STRING = 'world=2&rainbow=unicorn',
 
             requestQueryObject = new Asker({
-                method : 'POST',
                 body : QUERY_OBJECT
             }),
 
             requestQueryString = new Asker({
-                method : 'POST',
                 body : QUERY_STRING
             });
 
