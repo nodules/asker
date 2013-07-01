@@ -32,6 +32,11 @@ function testRequestWithoutOptions(request) {
 }
 
 module.exports = {
+    'AskerError accessible via static field "Error"' : function() {
+        assert.strictEqual(typeof Asker.Error, 'function',
+            'AskerError constructor is accessible via Request.Error field');
+    },
+
     'without arguments' : function() {
         var request = new Asker();
 
