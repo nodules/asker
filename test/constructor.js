@@ -253,6 +253,19 @@ module.exports = {
             'do not add "gzip" to existing "accept-encoding" header if gzip support disabled');
     },
 
+    'allow gzip option and header accept-encoding passed with gzip' : function() {
+        var ACCEPT_ENCODING = 'gzip, application/json',
+
+            request = new Asker({
+                headers : {
+                    'accept-encoding' : ACCEPT_ENCODING
+                }
+            });
+
+        assert.strictEqual(request.options.headers['accept-encoding'], ACCEPT_ENCODING,
+            'do not add "gzip" to existing "accept-encoding" header if header already contains "gzip"');
+    },
+
     'custom Agent' : function() {
         var agentName = 'test',
             request = new Asker({
