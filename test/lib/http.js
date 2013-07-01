@@ -40,7 +40,14 @@ TestServer.prototype.dispatcher = function(req, res) {
         res.statusCode = 500;
         res.end(this.buildResponse(false, ( ! d) ? 'test dispatcher not found' : 'test dispatcher is not a function'));
     } else {
-        d(req, res);
+        req.body = '';
+
+        req.on('data', function(data) {
+            req.body += data.toString();
+        });
+        req.on('end', function() {
+            d(req, res);
+        });
     }
 };
 
