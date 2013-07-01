@@ -193,6 +193,25 @@ module.exports = {
             'content-length header set to calculated value');
     },
 
+    'content-length is not calculated if passed in the options' : function() {
+        var CONTENT_LENGTH = 10,
+
+            request = new Asker({
+                headers : {
+                    'content-length' : CONTENT_LENGTH
+                },
+                body : '1234567'
+            });
+
+        assert.strictEqual(request.options.headers['content-length'], CONTENT_LENGTH,
+            'content-length header contains passed value');
+
+        assert.notStrictEqual(
+            request.options.headers['content-length'],
+            Buffer.byteLength(request.options.body, 'utf8'),
+            'content-length header value is not equal calculated value');
+    },
+
     'lowercase methods names' : function() {
         var request = new Asker({
                 method : 'post',
