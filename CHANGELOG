@@ -1,0 +1,65 @@
+asker (0.1.11); urgency=critical
+
+  * fix bug when response body is empty: "NaN" is returned in
+  the `response.data`
+  https://github.com/nodules/asker/issues/16
+
+  * fix undefined value of the `response.meta.retries.limit`
+  https://github.com/nodules/asker/issues/13
+
+  * fix bug of the parsing of the `url` option wuthout protocol
+  on the Node.js <=0.8
+  https://github.com/nodules/asker/issues/11
+
+  * fix `queueTimeout` option value (was computed as sum of the
+  `timeout` and QUEUE_TIMEOUT_DELTA always)
+  https://github.com/nodules/asker/issues/20
+
+  * `response` object description has been added to the README.md
+
+  * HTTP status code now available from the callback as the
+  `response.statusCode` field
+  https://github.com/nodules/asker/issues/12
+
+  * transport tests has been added
+  https://github.com/nodules/asker/issues/18
+  https://github.com/nodules/asker/issues/17
+  https://github.com/nodules/asker/issues/15
+
+  * istanbul has been added as tests coverage testing tool
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Mon, 1 Jul 2013 18:52:00 +0400
+
+asker (0.1.10); urgency=low (HIGH for options.url users)
+
+  * fix incorrect parsing of the `url` option if protocol is missing
+  https://github.com/nodules/asker/issues/7
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Thu, 20 Jun 2013 18:09:00 +0400
+
+asker (0.1.9); urgency=critical
+
+  * fix fall of the request constructor called without options hash
+  https://github.com/nodules/asker/issues/5
+
+  * fix unrecognizable option `method` which passed in lowercase
+  https://github.com/nodules/asker/issues/8
+
+  * set 'accept-encoding' header if no one passed in the options hash
+  and option `allowGzip` enabled
+  https://github.com/nodules/asker/issues/10
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Thu, 20 Jun 2013 4:59:00 +0400
+
+asker (0.1.7); urgency=low
+
+  * add `url` option as an alternative to the combination of the `host`,
+  `port` and `path` options (git:508a616)
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Mon, 27 May 2013 20:18:00 +0400
+
+asker (0.1.6); urgency=low
+
+  * fix hostname logging
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Mon, 18 Mar 2013 15:29:00 +0400
