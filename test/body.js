@@ -131,5 +131,97 @@ module.exports = {
 
             done();
         });
+    }),
+
+    'chunked response body compilation' : httpTest(function(done, server) {
+        var RESPONSE = 'long response which will be sent in more than one chunks of the data',
+            responseBuf = new Buffer(RESPONSE, 'utf8');
+
+        server.addTest(function(req, res) {
+            res.write(responseBuf.slice(0, 5));
+            res.write(responseBuf.slice(5, 10));
+            res.end(responseBuf.slice(10));
+        });
+
+        ask({ port : server.port }, function(error, response) {
+            assert.strictEqual(error, null, 'no errors occured');
+
+            assert.strictEqual(response.data, RESPONSE,
+                'chunked response compiled');
+
+            done();
+        });
+    }),
+
+    'response body compilation with recieved "content-length"' : httpTest(function(done, server) {
+        var RESPONSE = 'long response which will be sent in the two chunks of the data',
+            responseBuf = new Buffer(RESPONSE, 'utf8');
+
+        server.addTest(function(req, res) {
+            res.writeHead(200, { 'Content-length' : responseBuf.length });
+            res.end(responseBuf);
+        });
+
+        ask({ port : server.port }, function(error, response) {
+            assert.strictEqual(error, null, 'no errors occured');
+
+            assert.strictEqual(response.data, RESPONSE,
+                'chunked response compiled');
+
+            done();
+        });
+    }),
+
+    'response body compilation with "content-length" less than actual content length' : httpTest(function(done, server) {
+        var RESPONSE = 'response me, please';
+
+        // turn off the test for node.js 0.6
+        // due to https://github.com/joyent/node/pull/3777 which will not be ported to 0.6 branch ever
+        if (process.version.indexOf('v0.6') === 0) {
+            return done();
+        }
+
+        server.addTest(function(req, res) {
+            res.writeHead(200, { 'Content-length' : Buffer.byteLength(RESPONSE, 'utf8') - 10 });
+            res.end(RESPONSE);
+        });
+
+        ask({ port : server.port }, function(error, response) {
+            var resBuffer = new Buffer(RESPONSE, 'utf8');
+
+            // @todo: remove workaround for Node.js 0.8 when 0.8 support will be dropped
+            // NOde.js 0.8 doesn't emit error if content-length value is less than actual contetn-length
+            if (error === null) {
+                assert.strictEqual(response.data, resBuffer.slice(0, resBuffer.length - 10).toString('utf8'),
+                    'response recieved');
+            } else {
+                assert.strictEqual(error.code, Asker.Error.CODES.HTTP_CLIENT_REQUEST_ERROR, 'http client error');
+
+                assert.strictEqual(typeof response, 'undefined',
+                    'response is not recieved');
+            }
+
+            done();
+        });
+    }),
+
+    // @todo needs to be fixed
+    // if content-length recieved, then don't wait for more chunks
+    'response body compilation with "content-length" more than actual content length' : httpTest(function(done, server) {
+        var RESPONSE = 'response me, please';
+
+        server.addTest(function(req, res) {
+            res.writeHead(200, { 'Content-length' : Buffer.byteLength(RESPONSE, 'utf8') + 10 });
+            res.end(RESPONSE);
+        });
+
+        ask({ port : server.port, timeout : 300 }, function(error, response) {
+            assert.strictEqual(error.code, Asker.Error.CODES.SOCKET_TIMEOUT, 'http client error');
+
+            assert.strictEqual(typeof response, 'undefined',
+                'response is not recieved');
+
+            done();
+        });
     })
 };
