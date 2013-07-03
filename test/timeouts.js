@@ -123,6 +123,26 @@ module.exports = {
                 });
         }, 100);
 
+    }),
+
+    'socket timeout must works corectly for chunked response (must not flash timeouts on first chunk)' : httpTest(function(done, server) {
+        server.addTest(function(req, res) {
+            res.write('chunk1');
+
+            setTimeout(function() {
+                res.end('chunk2');
+            }, 300);
+        });
+
+        ask({ port : server.port, timeout : 100 }, function(error, response) {
+            assert.strictEqual(error.code, Asker.Error.CODES.SOCKET_TIMEOUT,
+                'request has been failed due to socket timeout');
+
+            assert.strictEqual(typeof response, 'undefined',
+                'response must not be passed to callback');
+
+            done();
+        });
     })
 
 };
