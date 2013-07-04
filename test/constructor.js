@@ -271,6 +271,15 @@ module.exports = {
             'do not add "gzip" to existing "accept-encoding" header if header already contains "gzip"');
     },
 
+    'calculating queueTimeout if was not passed to constructor' : function() {
+        var request = new Asker();
+
+        assert.strictEqual(
+            request.options.queueTimeout,
+            request.options.timeout + request.QUEUE_TIMEOUT_DELTA,
+            'queueTimeout evaluated as timeout + QUEUE_TIMEOUT_DELTA');
+    },
+
     'custom Agent' : function() {
         var agentName = 'test',
             request = new Asker({
