@@ -134,8 +134,7 @@ module.exports = {
     }),
 
     'chunked response body compilation' : httpTest(function(done, server) {
-        var RESPONSE = 'long response which will be sent in more than one chunks of the data',
-            responseBuf = new Buffer(RESPONSE, 'utf8');
+        var responseBuf = new Buffer(RESPONSE, 'utf8');
 
         server.addTest(function(req, res) {
             res.write(responseBuf.slice(0, 5));
@@ -154,8 +153,7 @@ module.exports = {
     }),
 
     'response body compilation with recieved "content-length"' : httpTest(function(done, server) {
-        var RESPONSE = 'long response which will be sent in the two chunks of the data',
-            responseBuf = new Buffer(RESPONSE, 'utf8');
+        var responseBuf = new Buffer(RESPONSE, 'utf8');
 
         server.addTest(function(req, res) {
             res.writeHead(200, { 'Content-length' : responseBuf.length });
@@ -173,8 +171,6 @@ module.exports = {
     }),
 
     'response body compilation with "content-length" less than actual content length' : httpTest(function(done, server) {
-        var RESPONSE = 'response me, please';
-
         // turn off the test for node.js 0.6
         // due to https://github.com/joyent/node/pull/3777 which will not be ported to 0.6 branch ever
         if (process.version.indexOf('v0.6') === 0) {
@@ -205,28 +201,9 @@ module.exports = {
         });
     }),
 
-    'httpRequest error event listener test' : httpTest(function(done, server) {
-        server.addTest(function(req, res) {
-            res.writeHead(201, { 'ктулху\nотаке' : 333 });
-            res.end();
-        });
-
-        ask({ port : server.port }, function(error, response) {
-            assert.strictEqual(error.code, Asker.Error.CODES.HTTP_CLIENT_REQUEST_ERROR,
-                'http parser error recieved');
-
-            assert.strictEqual(typeof response, 'undefined',
-                'response is not compiled');
-
-            done();
-        });
-    }),
-
     // @todo needs to be fixed
     // if content-length recieved, then don't wait for more chunks
     'response body compilation with "content-length" more than actual content length' : httpTest(function(done, server) {
-        var RESPONSE = 'response me, please';
-
         server.addTest(function(req, res) {
             res.writeHead(200, { 'Content-length' : Buffer.byteLength(RESPONSE, 'utf8') + 10 });
             res.end(RESPONSE);
