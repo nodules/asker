@@ -25,8 +25,20 @@ module.exports = {
 
     'agents pool usage' : function() {
         var AGENT_NAME = 'smith',
-            request1 = new Asker({ agent : { name : AGENT_NAME, persistent : true } }),
-            request2 = new Asker({ agent : { name : AGENT_NAME, persistent : false } });
+            request1,
+            request2;
+
+        assert.strictEqual(typeof Asker.agentsPool, 'object',
+            'agent pool is object and accessible via Asker.agentsPool');
+
+        assert.strictEqual(Object.keys(Asker.agentsPool).length, 0,
+            'pool is empty, globalAgent is not holded by the agents pool');
+
+        request1 = new Asker({ agent : { name : AGENT_NAME, persistent : true } }),
+        request2 = new Asker({ agent : { name : AGENT_NAME, persistent : false } });
+
+        assert.strictEqual(Object.keys(Asker.agentsPool).length, 1,
+            'agent added to the agents pool due to request contructor call with `agent` option');
 
         assert.strictEqual(request1.agent, request2.agent,
             'agent reused from pool by name');
@@ -63,6 +75,7 @@ module.exports = {
     'global and default pools sizes is 1024' : function() {
         assert.strictEqual(http.globalAgent.maxSockets, 1024,
             'http.globalAgent per host:port pair pools size is 1024');
+
         assert.strictEqual(http.Agent.defaultMaxSockets, 1024,
             'http.Agent per host:port pair pools size is 1024 by default');
     }
