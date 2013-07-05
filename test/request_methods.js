@@ -1,4 +1,5 @@
 var Asker = require('../lib/asker'),
+    httpTest = require('./lib/http'),
     assert = require('chai').assert;
 
 module.exports = {
@@ -53,5 +54,102 @@ module.exports = {
 
         assert.strictEqual(request._isRunning, false,
             '_isRunning was set to false by #done() call');
-    }
+    },
+
+    '#getTimers() must returns `undefined` for not launched timers' : function() {
+        var timers = (new Asker()).getTimers();
+
+        assert.strictEqual(typeof timers.network, 'undefined',
+            'network timer is undefined');
+
+        assert.strictEqual(typeof timers.total, 'undefined',
+            'total timer is undefined');
+    },
+
+    '#getTimers() returns timers values as the diff between operations start and end' : function() {
+        var request = new Asker(),
+            DELTA = 100;
+
+        request._timeNetworkStart = Date.now();
+        request._timeNetworkEnd = request._timeNetworkStart + DELTA;
+
+        assert.strictEqual(request.getTimers().network, DELTA, 'network time is computed right');
+
+        request._timeExecuteStart = Date.now();
+        request._timeExecuteEnd = request._timeExecuteStart + DELTA;
+
+        assert.strictEqual(request.getTimers().total, DELTA, 'total time is computed right');
+    },
+
+    '#execute set _timeExecuteStart' : function() {
+        var request = new Asker();
+
+        request.execute();
+
+        assert.strictEqual(typeof request._timeExecuteStart, 'number', '#execute set _timeExecuteStart');
+    },
+
+    '#done set _timeExecuteEnd' : function() {
+        var request = new Asker();
+
+        request.done();
+
+        assert.strictEqual(typeof request._timeExecuteEnd, 'number', '#done set _timeExecuteEnd');
+    },
+
+    '#getTimers returns `total` if #done was not called' : function() {
+        var request = new Asker();
+
+        request._timeExecuteStart = Date.now() - 10;
+
+        assert.strictEqual(typeof request.getTimers().total, 'number', '#getTimers().total is number');
+        assert.ok(request.getTimers().total > 0, '#getTimers().total is larger than 0');
+    },
+
+    'httpRequest `socket` event listener set _timeNetworkStart' : httpTest(function(done, server) {
+        var request = new Asker({ port : server.port });
+
+        server.addTest(function(req, res) {
+            assert.strictEqual(typeof request._timeNetworkStart, 'number',
+                '_timeNetworkStart is a number');
+
+            res.end();
+
+            done();
+        });
+
+        request.execute();
+    }),
+
+    '#getTimers returns `network` if _timeNetworkEnd was not set' : httpTest(function(done, server) {
+        var request = new Asker({ port : server.port });
+
+        server.addTest(function(req, res) {
+            assert.strictEqual(typeof request.getTimers().network, 'number',
+                '_timeNetworkStart is a number');
+
+            res.end();
+
+            done();
+        });
+
+        request.execute();
+    }),
+
+    'httpRequest `end` event listener set _timeNetworkEnd' : httpTest(function(done, server) {
+        var request;
+
+        server.addTest(function(req, res) {
+            res.end();
+        });
+
+        request = new Asker({ port : server.port }, function() {
+            assert.strictEqual(typeof request._timeNetworkEnd, 'number',
+                '_timeNetworkEnd is a number');
+
+            done();
+        });
+
+        request.execute();
+    })
 };
