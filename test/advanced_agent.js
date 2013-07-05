@@ -58,5 +58,12 @@ module.exports = {
             'non-persistent agent removed from pool by "' +
                 AdvancedAgent.EVENTS.SOCKET_REMOVED +
                 '" event');
+    },
+
+    'global and default pools sizes is 1024' : function() {
+        assert.strictEqual(http.globalAgent.maxSockets, 1024,
+            'http.globalAgent per host:port pair pools size is 1024');
+        assert.strictEqual(http.Agent.defaultMaxSockets, 1024,
+            'http.Agent per host:port pair pools size is 1024 by default');
     }
 };
