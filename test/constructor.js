@@ -280,6 +280,20 @@ module.exports = {
             'queueTimeout evaluated as timeout + QUEUE_TIMEOUT_DELTA');
     },
 
+    'QUEUE_TIMEOUT_DELTA redifinition' : function() {
+        var request1 = new Asker(),
+            request2,
+            NEW_DELTA = 100,
+            DELTA_DIFF = 100 - Asker.prototype.QUEUE_TIMEOUT_DELTA;
+
+        Asker.prototype.QUEUE_TIMEOUT_DELTA = NEW_DELTA;
+
+        request2 = new Asker();
+
+        assert.strictEqual(request2.options.queueTimeout - request1.options.queueTimeout, DELTA_DIFF,
+            'QUEUE_TIMEOUT_DELTA change is ok');
+    },
+
     'custom Agent' : function() {
         var agentName = 'test',
             request = new Asker({
