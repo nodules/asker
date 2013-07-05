@@ -151,5 +151,42 @@ module.exports = {
         });
 
         request.execute();
-    })
+    }),
+
+    '#formatTimestamp must return stringified human-readable result of #getTimers' : httpTest(function(done, server) {
+        var TIMEOUT = 50,
+            request;
+
+        server.addTest(function(req, res) {
+            setTimeout(function() {
+                res.end();
+            }, TIMEOUT);
+        });
+
+        request = new Asker({ port : server.port }, function() {
+            var ts = request.formatTimestamp(),
+                netTime, totalTime;
+
+            assert.ok(/^in \d+\~\d+ ms$/.test(ts), 'timestamp format is ok');
+
+            netTime = parseInt(/^in (\d+)~/.exec(ts)[1], 10);
+            totalTime = parseInt(/~(\d+) ms$/.exec(ts)[1], 10);
+
+            assert.ok( ! isNaN(netTime), 'network time is a number');
+            assert.ok( ! isNaN(totalTime), 'total time is a number');
+
+            assert.strictEqual(netTime, request.getTimers().network, 'stringified and original net time is equal');
+            assert.strictEqual(totalTime, request.getTimers().total, 'stringified and original total time is equal');
+
+            done();
+        });
+
+        request.execute();
+    }),
+
+    '#formatTimestamp interpolate undefined network time as "0"' : function() {
+        var request = new Asker();
+
+        assert.ok(/^in 0~/.test(request.formatTimestamp()), 'net time is "0"');
+    }
 };
