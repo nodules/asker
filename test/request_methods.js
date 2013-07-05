@@ -188,5 +188,33 @@ module.exports = {
         var request = new Asker();
 
         assert.ok(/^in 0~/.test(request.formatTimestamp()), 'net time is "0"');
-    }
+    },
+
+    '#getResponseMetaBase returns fulfilled object after request execution' : httpTest(function(done, server) {
+        var request;
+
+        server.addTest(function(req, res) {
+            res.end();
+        });
+
+        request = new Asker({ port : server.port }, function() {
+            var metaBase = request.getResponseMetaBase();
+
+            assert.strictEqual(typeof metaBase, 'object', 'meta is object');
+            assert.deepEqual(Object.keys(metaBase), ['time','options','retries'],
+                'meta contains required fields');
+            assert.deepEqual(metaBase.time, request.getTimers(),
+                'meta.time is equal #getTimers result');
+            assert.deepEqual(metaBase.options, request.options,
+                'meta.options is equal #options hash');
+            assert.strictEqual(metaBase.retries.limit, request.options.maxRetries,
+                'meta.retries.limit is equal #options.maxRetries');
+            assert.strictEqual(metaBase.retries.used, request.retries,
+                'meta.retries.used is equal #retries');
+
+            done();
+        });
+
+        request.execute();
+    })
 };
