@@ -294,6 +294,25 @@ module.exports = {
             'QUEUE_TIMEOUT_DELTA change is ok');
     },
 
+    'DEFAULT_OPTIONS should be accessible as property of Asker' : function() {
+        assert.strictEqual(typeof Asker.DEFAULT_OPTIONS, 'object',
+            'DEFAULT_OPTIONS is accessible via Asker property');
+
+        assert.deepEqual(
+            Asker.DEFAULT_OPTIONS,
+            {
+                host : 'localhost',
+                port : 80,
+                path : '/',
+                method : 'GET',
+                maxRetries : 0,
+                timeout : 500,
+                allowGzip : true,
+                requestId : ''
+            },
+            'DEFAULT_OPTIONS is ok');
+    },
+
     'custom Agent' : function() {
         var agentName = 'test',
             request = new Asker({
