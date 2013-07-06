@@ -246,5 +246,29 @@ module.exports = {
         });
 
         request.resolve();
+    },
+
+    '#statusCodeFilter must return `accept` only for codes 200 and 201' : function() {
+        var request = new Asker();
+
+        assert.deepEqual(
+            request.statusCodeFilter(200),
+            { accept : true, isRetryAllowed : true },
+            'code 200 is accepted and retry is allowed for it');
+
+        assert.deepEqual(
+            request.statusCodeFilter(201),
+            { accept : true, isRetryAllowed : true },
+            'code 201 is accepted and retry is allowed for it');
+
+        assert.deepEqual(
+            request.statusCodeFilter(301),
+            { accept : false, isRetryAllowed : true },
+            'code 301 is not accepted and retry is allowed for it');
+
+        assert.deepEqual(
+            request.statusCodeFilter(401),
+            { accept : false, isRetryAllowed : false },
+            'code 401 is not accepted and retry is not allowed for it');
     }
 };
