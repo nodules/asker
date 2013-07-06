@@ -216,5 +216,35 @@ module.exports = {
         });
 
         request.execute();
-    })
+    }),
+
+    '#resolve calls #done() without error and produce `response` object' : function(done) {
+        var request = new Asker({}, function() {
+                done();
+            }),
+            _done = request.done;
+
+        request.done = function(error, data) {
+            assert.strictEqual(error, null,
+                '#done() called without error');
+
+            assert.strictEqual(typeof data, 'object',
+                '#done() called with data object');
+
+            _done.apply(request, arguments);
+        };
+
+        request.resolve();
+    },
+
+    '#resolve produce `response.meta` using #getResponseMetaBase if the argument `meta` is not passed' : function(done) {
+        var request = new Asker({}, function(error, response) {
+            assert.deepEqual(response.meta, request.getResponseMetaBase(),
+                'response.meta is equal request.getResponseMetaBase() result');
+
+            done();
+        });
+
+        request.resolve();
+    }
 };
