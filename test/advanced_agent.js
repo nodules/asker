@@ -25,8 +25,10 @@ module.exports = {
 
     'agents pool usage' : function() {
         var AGENT_NAME = 'smith',
-            request1,
-            request2;
+            request1 = new Asker({ agent : { name : AGENT_NAME, persistent : true } }),
+            request2 = new Asker({ agent : { name : AGENT_NAME, persistent : false } }),
+            agent1,
+            agent2;
 
         assert.strictEqual(typeof Asker.agentsPool, 'object',
             'agent pool is object and accessible via Asker.agentsPool');
@@ -34,16 +36,16 @@ module.exports = {
         assert.strictEqual(Object.keys(Asker.agentsPool).length, 0,
             'pool is empty, globalAgent is not holded by the agents pool');
 
-        request1 = new Asker({ agent : { name : AGENT_NAME, persistent : true } }),
-        request2 = new Asker({ agent : { name : AGENT_NAME, persistent : false } });
+        agent1 = Asker.getAgent(request1);
+        agent2 = Asker.getAgent(request2);
 
         assert.strictEqual(Object.keys(Asker.agentsPool).length, 1,
             'agent added to the agents pool due to request contructor call with `agent` option');
 
-        assert.strictEqual(request1.agent, request2.agent,
+        assert.strictEqual(agent1, agent2,
             'agent reused from pool by name');
 
-        assert.strictEqual(request2.agent.options.persistent, true,
+        assert.strictEqual(agent2.options.persistent, true,
             'agent options was not overriden by second declaration');
     },
 
@@ -54,17 +56,18 @@ module.exports = {
                     name : AGENT_NAME,
                     persistent : false
                 }
-            });
+            }),
+            agent = Asker.getAgent(request);
 
-        assert.strictEqual(request.agent, Asker.agentsPool[AGENT_NAME],
+        assert.strictEqual(agent, Asker.agentsPool[AGENT_NAME],
             'step #1: agent in the pool');
 
         request = null;
 
-        assert.ok(Asker.agentsPool[AGENT_NAME] instanceof AdvancedAgent,
+        assert.ok(agent instanceof AdvancedAgent,
             'step #2: agent still in the pool');
 
-        Asker.agentsPool[AGENT_NAME].emit(AdvancedAgent.EVENTS.SOCKET_REMOVED);
+        agent.emit(AdvancedAgent.EVENTS.SOCKET_REMOVED);
 
         assert.strictEqual(Object.keys(Asker.agentsPool).length, 0,
             'non-persistent agent removed from pool by "' +

@@ -1,8 +1,6 @@
-var http = require('http'),
-    url = require('url'),
+var url = require('url'),
     extend = require('extend'),
     Asker = require('../lib/asker'),
-    AdvancedAgent = require('../lib/advanced_agent'),
     assert = require('chai').assert;
 
 function testRequestWithoutOptions(request) {
@@ -42,9 +40,6 @@ module.exports = {
 
         testRequestWithoutOptions(request);
 
-        assert.strictEqual(request.agent, http.globalAgent,
-            'use http.globalAgent by default');
-
         assert.strictEqual(typeof request._callback, 'undefined',
             'main callback is undefined by default');
     },
@@ -54,9 +49,6 @@ module.exports = {
             request = new Asker({}, callback);
 
         testRequestWithoutOptions(request);
-
-        assert.strictEqual(request.agent, http.globalAgent,
-            'use http.globalAgent by default');
 
         assert.strictEqual(request._callback, callback,
             'custom request callback');
@@ -311,25 +303,5 @@ module.exports = {
                 requestId : ''
             },
             'DEFAULT_OPTIONS is ok');
-    },
-
-    'custom Agent' : function() {
-        var agentName = 'test',
-            request = new Asker({
-                agent : {
-                    name : agentName
-                }
-            });
-
-        testRequestWithoutOptions(request);
-
-        assert.notEqual(request.agent, http.globalAgent,
-            'agent is not default http.globalAgent');
-
-        assert.ok(request.agent instanceof AdvancedAgent,
-            'using custom agent');
-
-        assert.strictEqual(request.agent, Asker.agentsPool[agentName],
-            'custom agent accessible in the agents pool by name');
     }
 };
