@@ -1,6 +1,8 @@
 var http = require('http'),
     Asker = require('../lib/asker'),
+    ask = Asker,
     AdvancedAgent = require('../lib/advanced_agent'),
+    httpTest = require('./lib/http'),
     assert = require('chai').assert;
 
 module.exports = {
@@ -130,5 +132,47 @@ module.exports = {
 
         assert.strictEqual(Object.keys(Asker.agentsPool).length, 1,
             'still 1 agent is hosted in the pool');
-    }
+    },
+
+    'non-persistent agent should not be removed from pool if it has any requests in queue' : httpTest(function(done, server) {
+        var AGENT_OPTIONS = {
+                name : 'non-persistent agent test #75840',
+                maxSockets : 1,
+                persistent : false
+            },
+            agent = Asker.createAgent(AGENT_OPTIONS),
+            socketRemoveEmitted = 0,
+            requestsResolved = 0;
+
+        function responseListener() {
+            if (++requestsResolved === 2) {
+                setTimeout(function() {
+                    assert.strictEqual(socketRemoveEmitted, 2,
+                        'socketRemoved event emitted on each inappropriate response');
+
+                    assert.strictEqual(typeof Asker.agentsPool[AGENT_OPTIONS.name], 'undefined',
+                        'non-persistent agent removed when it`s queue became empty');
+
+                    done();
+                }, 50);
+            }
+        }
+
+        function testResponse(req, res) {
+            // return inaccepatble code to instigate SOCKET_REMOVED event
+            res.statusCode = 404;
+            res.end();
+        }
+
+        server.addTest(testResponse);
+        server.addTest(testResponse);
+
+        agent.on(AdvancedAgent.EVENTS.SOCKET_REMOVED, function() {
+            socketRemoveEmitted++;
+        });
+
+        // use same agent as created before using same name in the options
+        ask({ port : server.port, agent : AGENT_OPTIONS }, responseListener);
+        ask({ port : server.port, agent : AGENT_OPTIONS }, responseListener);
+    })
 };
