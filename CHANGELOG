@@ -1,3 +1,44 @@
+asker (0.1.12); urgency=critical
+
+  * full code coverage by tests
+  https://github.com/nodules/asker/issues?labels=test&milestone=3&page=1&state=closed
+
+  * drop support for Node.js < 0.8.21 due to the bugs in the "http" module
+
+  * fix incorrect behaviour of Request#isRunning (always returns `false`)
+  https://github.com/nodules/asker/issues/44
+
+  * constructor compiles request body always when `options.body`
+  have defined
+  https://github.com/nodules/asker/issues/1
+
+  * fix redundant callbacks is the case when "content-length" header is less
+  than actual response body length
+  https://github.com/nodules/asker/issues/46
+
+  * fix missing callback call in the case when "content-length" header is
+  more than actual response body length
+  https://github.com/nodules/asker/issues/47
+
+  * move `queueTimeout` default value calculation from request excution time
+  to constructor
+  https://github.com/nodules/asker/issues/48
+
+  * callback has became optional argument of the request constructor
+  https://github.com/nodules/asker/issues/54
+
+  * fix network timer resolving
+  https://github.com/nodules/asker/issues/58
+
+  * request can be tried to execute with a dead agent
+  https://github.com/nodules/asker/issues/60
+
+  * `Request.createAgent` doesn't throw an error if the agent with the same
+  name already in the agents pool
+  https://github.com/nodules/asker/issues/62
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Mon, 08 Jul 2013 15:38:20 +0400
+
 asker (0.1.11); urgency=critical
 
   * fix bug when response body is empty: "NaN" is returned in
