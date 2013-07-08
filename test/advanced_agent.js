@@ -174,5 +174,47 @@ module.exports = {
         // use same agent as created before using same name in the options
         ask({ port : server.port, agent : AGENT_OPTIONS }, responseListener);
         ask({ port : server.port, agent : AGENT_OPTIONS }, responseListener);
-    })
+    }),
+
+    'Request.getAgent() must returns http.globalAgent if agent name is not defined in the request options' : function() {
+        assert.strictEqual(Asker.getAgent(new Asker()), http.globalAgent,
+            'http.globalAgent is returned for request without agent configuration');
+
+        assert.strictEqual(Asker.getAgent(new Asker({ agent : { maxSockets : 1 } })), http.globalAgent,
+            'http.globalAgent is returned for request without agent name');
+
+        assert.notStrictEqual(http.globalAgent.maxSockets, 1,
+            'http.globalAgent was not modified');
+
+        assert.strictEqual(Asker.getAgent(new Asker({ agent : { name : 'globalAgent' } })), http.globalAgent,
+            'http.globalAgent is returned for request with agent name "globalAgent"');
+    },
+
+    'Request.getAgent() must create agent if no agent with desired name is not exist in the pool' : function() {
+        var agent;
+
+        assert.strictEqual(Object.keys(Asker.agentsPool).length, 0,
+            'agents pool is empty');
+
+        agent = Asker.getAgent(new Asker({ agent : { name : 'getAgent test' } }));
+
+        assert.ok(agent instanceof AdvancedAgent, 'Advanced agent created');
+
+        assert.strictEqual(Object.keys(Asker.agentsPool).length, 1,
+            'agents pool contains 1 agent');
+
+        assert.strictEqual(Asker.agentsPool[agent.options.name], agent,
+            'created agent is hosted in the agents pool');
+    },
+
+    'Request.getAgent() must returns existing agent from pool if agent with desired name exists in the agents pool' : function() {
+        var AGENT_OPTIONS = { name : 'getAgent test' },
+            agent = Asker.createAgent(AGENT_OPTIONS);
+
+        assert.strictEqual(Asker.getAgent(new Asker({ agent : AGENT_OPTIONS })), agent,
+            'getAgent returns existing agent');
+
+        assert.strictEqual(Object.keys(Asker.agentsPool).length, 1,
+            'only 1 advanced agent in the agents pool');
+    }
 };
