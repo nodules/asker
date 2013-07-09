@@ -36,7 +36,7 @@ All parameters are optional.
 * `{Object} headers` — HTTP headers
 * `{Object} query` — Query params
 * `{String} requestId=""`  — Request ID, used in log messages
-* `{*} body` — request body for `POST`, `PUT` and `PATCH` methods. If it's an `Object` — `JSON.stringify` is applied, otherwise it's converted to `String`.
+* `{*} body` — request body. If it's an `Object` — `JSON.stringify` is applied, otherwise it's converted to `String`.
 * `{Number} maxRetries=0` — Max number of retries allowed for the request
 * `{Function} onretry(reason Error, retryCount Number)` — called when retry happens. By default it does nothing. As an example, you can pass a function that logs a warning.
 * `{Number} timeout=500` — timeout from the moment, when a socket was given by a pool manager.
