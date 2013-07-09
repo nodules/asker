@@ -37,7 +37,7 @@ All parameters are optional.
 * `{Object} query` — Query params
 * `{String} requestId=""` — Request ID, used in log messages
 * `{*} body` — request body. If it's an `Object` — `JSON.stringify` is applied, otherwise it's converted to `String`.
-* `{String} bodyEncoding="stringify"` — Body encoding method (`stringify`, `text`, `urlencoded`, `multipart` or self implemented). [More info](#body-encoding).
+* `{String} bodyEncoding="string"` — Body encoding method (`string`, `json`, `urlencoded`, `multipart` or self implemented). [More info](#body-encoding).
 * `{Number} maxRetries=0` — Max number of retries allowed for the request
 * `{Function} onretry(reason Error, retryCount Number)` — called when retry happens. By default it does nothing. As an example, you can pass a function that logs a warning.
 * `{Number} timeout=500` — timeout from the moment, when a socket was given by a pool manager.
@@ -106,8 +106,8 @@ Body encoders converts `body` to corresponding format and sets `Content-type` he
 
 ### Built-in encoders
 
-* `stringify` — Applies `JSON.stringify` if `Object` was passed to `body` (otherwise `text` encoder will be used). Accepts `Object`.
-* `text` — Converts `body` to `String`. Accepts all types.
+* `string` — Converts `body` to `String`. Accepts all types.
+* `json` — Applies `JSON.stringify` to the `body`. Accepts all types.
 * `urlencoded` — Converts `body` to query string. Accepts `Object`.
 * `multipart` — Formats `body` according to [multipart/form-data spec](http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.2). Accepts `Object` (or `Buffer` object).
 
@@ -146,20 +146,38 @@ Constructor or Asker call as function can throw following errors if you use body
 
 ### Custom encoders
 
-To implement you own body encoder, you must add a description object as the `Asker.bodyEncoders` property. Property name will be used as the encoder name.
+To implement you own body encoder, you must add an encoding function as the `Asker.bodyEncoders` property. Property name will be used as the encoder name.
 
 Example:
 
 ```javascript
 var Asker = require('asker');
 
-Asker.bodyEncoders.trimText = {     // encoder name is 'trimText'
-    header : 'text/plain',          // 'content-type' header will be set to 'text/plain'
-    type : '*',                     // any type of the `body` options is allowed by this encoder
-    proccess: function(data) {      // encoding routine
-        return String(data).trim();
+// encoder name is 'trimText'
+Asker.bodyEncoders.trimText = function(body, setContentType) {
+    // throw error if passed body format is not acceptable for your encoder
+    if (['number', 'string', 'boolean'].indexOf(typeof body) === -1) {
+        throw AskerError.createError(AskerError.CODES.UNEXPECTED_BODY_TYPE, {
+            type : typeof body,
+            expectedTypes : 'Object'
+        });
     }
-}
+
+    // 'content-type' header will be set to 'text/plain'
+    setContentType('text/plain');
+
+    return String(data).trim();
+};
+```
+
+Note: `setContentType` sets "Content-Type" header only if header was not set before. But you can force overriding by passing `true` as second argument:
+
+```javascript
+Asker.bodyEncoders.trimText = function(body, setContentType) {
+    setContentType('nyan/colorful');
+
+    return 'Colorful nyan cat';
+};
 ```
 
 ## Connection pools tuning
