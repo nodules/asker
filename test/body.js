@@ -171,12 +171,6 @@ module.exports = {
     }),
 
     'response body compilation with "content-length" less than actual content length' : httpTest(function(done, server) {
-        // turn off the test for node.js 0.6
-        // due to https://github.com/joyent/node/pull/3777 which will not be ported to 0.6 branch ever
-        if (process.version.indexOf('v0.6') === 0) {
-            return done();
-        }
-
         server.addTest(function(req, res) {
             res.writeHead(200, { 'Content-length' : Buffer.byteLength(RESPONSE, 'utf8') - 10 });
             res.end(RESPONSE);
@@ -188,7 +182,7 @@ module.exports = {
             // @todo: remove workaround for Node.js 0.8 when 0.8 support will be dropped
             // Node.js 0.8 doesn't emit error if content-length value is less than actual contetn-length
             if (error === null) {
-                assert.strictEqual(response.data, resBuffer.slice(0, resBuffer.length - 10),
+                assert.strictEqual(response.data.toString(), resBuffer.slice(0, resBuffer.length - 10).toString(),
                     'response recieved');
             } else {
                 assert.strictEqual(error.code, Asker.Error.CODES.HTTP_CLIENT_REQUEST_ERROR, 'http client error');
