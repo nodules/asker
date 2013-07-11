@@ -35,7 +35,7 @@ module.exports = {
         });
 
         ask({ port : server.port }, function(error, response) {
-            assert.strictEqual(response.data, ORIGINAL_RESPONSE.toString('utf8'),
+            assert.strictEqual(response.data.toString(), ORIGINAL_RESPONSE.toString(),
                 'compressed response has been deflated as expected');
 
             done();

@@ -16,7 +16,7 @@ module.exports = {
         ask({ port : server.port }, function(error, response) {
             assert.strictEqual(error, null, 'no errors occured');
 
-            assert.strictEqual(response.data, RESPONSE, 'response data is present and is a correct string');
+            assert.strictEqual(response.data.toString(), RESPONSE, 'response data is present and is a correct string');
 
             assert.strictEqual(response.statusCode, 200, 'statusCode is present and equals 200');
 

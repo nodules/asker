@@ -21,7 +21,7 @@ module.exports = {
             },
             function(error, response) {
                 assert.strictEqual(error, null, 'no errors occured');
-                assert.strictEqual(response.data, RESPONSE, 'response is correct');
+                assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
 
                 done();
             }

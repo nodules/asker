@@ -23,7 +23,7 @@ module.exports = {
         });
 
         ask({ port : server.port }, function(error, response) {
-            assert.strictEqual(response.data, RESPONSE, 'response is correct');
+            assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
 
             done();
         });
@@ -36,7 +36,7 @@ module.exports = {
         });
 
         ask({ port : server.port }, function(error, response) {
-            assert.strictEqual(response.data, RESPONSE, 'response is correct');
+            assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
 
             done();
         });
@@ -49,7 +49,7 @@ module.exports = {
         });
 
         ask({ port : server.port }, function(error, response) {
-            var parsed = JSON.parse(response.data);
+            var parsed = JSON.parse(response.data.toString());
 
             assert.strictEqual(error, null, 'no errors occured');
             assert.strictEqual(parsed.data[2].name, 'Alfa Romeo', 'response is correct');
@@ -72,7 +72,7 @@ module.exports = {
 
         ask({ port : server.port, method : 'post', body : test }, function(error, response) {
             assert.strictEqual(error, null, 'no errors occured');
-            assert.strictEqual(response.data, RESPONSE, 'response is correct');
+            assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
 
             done();
         });
@@ -91,7 +91,7 @@ module.exports = {
 
         ask({ port : server.port, method : 'put', body : test }, function(error, response) {
             assert.strictEqual(error, null, 'no errors occured');
-            assert.strictEqual(response.data, RESPONSE, 'response is correct');
+            assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
 
             done();
         });
@@ -145,7 +145,7 @@ module.exports = {
         ask({ port : server.port }, function(error, response) {
             assert.strictEqual(error, null, 'no errors occured');
 
-            assert.strictEqual(response.data, RESPONSE,
+            assert.strictEqual(response.data.toString(), RESPONSE,
                 'chunked response compiled');
 
             done();
@@ -163,7 +163,7 @@ module.exports = {
         ask({ port : server.port }, function(error, response) {
             assert.strictEqual(error, null, 'no errors occured');
 
-            assert.strictEqual(response.data, RESPONSE,
+            assert.strictEqual(response.data.toString(), RESPONSE,
                 'chunked response compiled');
 
             done();
@@ -186,9 +186,9 @@ module.exports = {
             var resBuffer = new Buffer(RESPONSE, 'utf8');
 
             // @todo: remove workaround for Node.js 0.8 when 0.8 support will be dropped
-            // NOde.js 0.8 doesn't emit error if content-length value is less than actual contetn-length
+            // Node.js 0.8 doesn't emit error if content-length value is less than actual contetn-length
             if (error === null) {
-                assert.strictEqual(response.data, resBuffer.slice(0, resBuffer.length - 10).toString('utf8'),
+                assert.strictEqual(response.data, resBuffer.slice(0, resBuffer.length - 10),
                     'response recieved');
             } else {
                 assert.strictEqual(error.code, Asker.Error.CODES.HTTP_CLIENT_REQUEST_ERROR, 'http client error');

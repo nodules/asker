@@ -22,7 +22,7 @@ module.exports = {
         ask({ port : server.port }, function(error, response) {
             assert.strictEqual(error, null, 'no errors occured');
             assert.strictEqual(response.statusCode, 200, 'statusCode equals 200');
-            assert.strictEqual(response.data, RESPONSE, 'response is correct');
+            assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
 
             done();
         });
@@ -91,7 +91,7 @@ module.exports = {
         ask({ port : server.port, statusFilter : filter }, function(error, response) {
             assert.strictEqual(error, null, '200 is still allowed, even with custom statusFilter function');
             assert.strictEqual(response.statusCode, 200, 'statusCode equals 200');
-            assert.strictEqual(response.data, RESPONSE, 'response is correct');
+            assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
 
             done();
         });
@@ -121,7 +121,7 @@ module.exports = {
         ask({ port : server.port, statusFilter : filter }, function(error, response) {
             assert.strictEqual(error, null, '404 is now allowed, according to statusFilter function');
             assert.strictEqual(response.statusCode, 404, 'statusCode equals 404');
-            assert.strictEqual(response.data, RESPONSE, 'response is correct');
+            assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
 
             done();
         });
