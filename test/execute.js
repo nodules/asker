@@ -65,5 +65,18 @@ module.exports = {
             'value returned by isRunning getter equals private field value');
 
         done();
+    },
+
+    'set callback via Request#execute()' : function(done) {
+        var request = new Asker();
+
+        assert.strictEqual(typeof request._callback, 'undefined',
+            'callback has not been set in the constructor call');
+
+        request.execute(function() {
+            assert.ok(true, 'callback called');
+
+            done();
+        });
     }
 };
