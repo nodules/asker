@@ -30,7 +30,7 @@ module.exports = {
 
     'default http status codes processing => 201' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
-            res.writeHead(201, { 'Location': 'http://example.com' });
+            res.writeHead(201, { 'Location' : 'http://example.com' });
             res.end();
         });
 

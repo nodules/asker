@@ -29,7 +29,7 @@ module.exports = {
     }),
     'returned http headers are correct => 201-Location' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
-            res.writeHead(201, { 'Location': 'http://example.com' });
+            res.writeHead(201, { 'Location' : 'http://example.com' });
             res.end();
         });
 
