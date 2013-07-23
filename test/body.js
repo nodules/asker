@@ -61,7 +61,7 @@ module.exports = {
 
     'test request body => post => parse json' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
-            if (req.body && JSON.parse(req.body).data[0].name === 'AC' && req.method === 'POST') {
+            if (req.body && req.body.data[0].name === 'AC' && req.method === 'POST') {
                 res.statusCode = 200;
                 res.end(RESPONSE);
             } else {
@@ -80,7 +80,7 @@ module.exports = {
 
     'test request body => put => parse json' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
-            if (req.body && JSON.parse(req.body).data[0].name === 'AC' && req.method === 'PUT') {
+            if (req.body && req.body.data[0].name === 'AC' && req.method === 'PUT') {
                 res.statusCode = 200;
                 res.end(RESPONSE);
             } else {

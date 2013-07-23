@@ -297,6 +297,7 @@ module.exports = {
                 port : 80,
                 path : '/',
                 method : 'GET',
+                bodyEncoding : 'stringify',
                 maxRetries : 0,
                 timeout : 500,
                 allowGzip : true,
