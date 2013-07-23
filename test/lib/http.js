@@ -1,5 +1,6 @@
 var http = require('http'),
     Vow = require('vow'),
+    form = new require('formidable').IncomingForm(),
     PORT = process.env.ASKER_TEST_PORT || 10080;
 
 /**
@@ -40,14 +41,27 @@ TestServer.prototype.dispatcher = function(req, res) {
         res.statusCode = 500;
         res.end(this.buildResponse(false, ( ! d) ? 'test dispatcher not found' : 'test dispatcher is not a function'));
     } else {
-        req.body = '';
-
-        req.on('data', function(data) {
-            req.body += data.toString();
-        });
-        req.on('end', function() {
-            d(req, res);
-        });
+        // Use formidable parser when getting typed content (urlencoded, json, multipart)
+        if (['application/x-www-form-urlencoded', 'application/json', 'multipart/form-data'].indexOf(req.headers['content-type']) > -1) {
+            form.parse(req, function(err, fields, files) {
+                if (err) {
+                    res.statusCode = 500;
+                    res.end('formidable error: ' + err);
+                } else {
+                    req.body = fields;
+                    req.files = files;
+                    d(req, res);
+                }
+            });
+        } else {
+            req.body = '';
+            req.on('data', function(d) {
+                req.body += d;
+            });
+            req.on('end', function() {
+                d(req, res);
+            });
+        }
     }
 };
 
