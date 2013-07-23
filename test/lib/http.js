@@ -42,7 +42,7 @@ TestServer.prototype.dispatcher = function(req, res) {
         res.end(this.buildResponse(false, ( ! d) ? 'test dispatcher not found' : 'test dispatcher is not a function'));
     } else {
         // Use formidable parser when getting typed content (urlencoded, json, multipart)
-        if (['application/x-www-form-urlencoded', 'application/json', 'multipart/form-data'].indexOf(req.headers['content-type']) > -1) {
+        if (/(urlencoded|json|multipart)/.test(req.headers['content-type'])) {
             form.parse(req, function(err, fields, files) {
                 if (err) {
                     res.statusCode = 500;
