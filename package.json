@@ -40,7 +40,8 @@
     "vow": "0.3.x",
     "jshint": "2.1.x",
     "istanbul": "*",
-    "jscs": "1.0.x"
+    "jscs": "1.0.x",
+    "formidable": ">=1.0.14"
   },
   "engines": {
     "node": ">=0.8.21"
