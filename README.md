@@ -37,7 +37,7 @@ All parameters are optional.
 * `{Object} query` — Query params
 * `{String} requestId=""`  — Request ID, used in log messages
 * `{*} body` — request body. If it's an `Object` — `JSON.stringify` is applied, otherwise it's converted to `String`.
-* `{String} bodyEncoding` - Body encoding [method](#body-encoding).
+* `{String} bodyEncoding="stringify"` - Body encoding [method](#body-encoding).
 * `{Number} maxRetries=0` — Max number of retries allowed for the request
 * `{Function} onretry(reason Error, retryCount Number)` — called when retry happens. By default it does nothing. As an example, you can pass a function that logs a warning.
 * `{Number} timeout=500` — timeout from the moment, when a socket was given by a pool manager.
@@ -50,7 +50,7 @@ All parameters are optional.
 
 Converts `body` to corresponding format and sets `Content-type` header.
 Supported variants:
-* `stringify` - Default encoder. Will apply `JSON.stringify` if `Object` passed to `body` (otherwise `text` encoder will be used)
+* `stringify` - Will apply `JSON.stringify` if `Object` passed to `body` (otherwise `text` encoder will be used)
 * `text` - Converts `body` to `String`
 * `urlencoded` - Converts `body` to query string
 * `multipart` - Processes `body` according to `multipart/form-data` format.
