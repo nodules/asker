@@ -37,6 +37,7 @@ All parameters are optional.
 * `{Object} query` — Query params
 * `{String} requestId=""`  — Request ID, used in log messages
 * `{*} body` — request body. If it's an `Object` — `JSON.stringify` is applied, otherwise it's converted to `String`.
+* `{String} bodyEncoding` - Body encoding [method](#body-encoding).
 * `{Number} maxRetries=0` — Max number of retries allowed for the request
 * `{Function} onretry(reason Error, retryCount Number)` — called when retry happens. By default it does nothing. As an example, you can pass a function that logs a warning.
 * `{Number} timeout=500` — timeout from the moment, when a socket was given by a pool manager.
@@ -44,6 +45,24 @@ All parameters are optional.
 * `{Boolean} allowGzip=true` — allows response compression with gzip
 * `{Function} statusFilter` — status codes processing, see [Response status codes processing](#response-status-codes-processing) section for details.
 * `{Object} agent` — http.Agent options, see [Connection pools tuning](#connection-pools-tuning) section for details.
+
+## Body encoding
+
+Converts `body` to corresponding format and sets `Content-type` header.
+Supported variants:
+* `stringify` - Default encoder. Will apply `JSON.stringify` if `Object` passed to `body` (otherwise `text` encoder will be used)
+* `text` - Converts `body` to `String`
+* `urlencoded` - Converts `body` to query string
+* `multipart` - Processes `body` according to `multipart/form-data` format.
+
+```javascript
+	{
+		scalar_param : 'simple_param',
+		complex_param : { a : 1, b : 2 }, // JSON.stringify` will be applied
+		file_one :  <Buffer>,
+		file_two : { filename : 'image.jpg', mime : 'image/jpeg', data : <Buffer> }
+	}
+```
 
 ## Response format
 
