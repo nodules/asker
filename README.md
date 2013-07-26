@@ -35,9 +35,9 @@ All parameters are optional.
 * `{String} method="GET"`
 * `{Object} headers` — HTTP headers
 * `{Object} query` — Query params
-* `{String} requestId=""`  — Request ID, used in log messages
+* `{String} requestId=""` — Request ID, used in log messages
 * `{*} body` — request body. If it's an `Object` — `JSON.stringify` is applied, otherwise it's converted to `String`.
-* `{String} bodyEncoding="stringify"` - Body encoding method (`stringify`, `text`, `urlencoded`, `multipart` or self implemented). [More info](#body-encoding).
+* `{String} bodyEncoding="stringify"` — Body encoding method (`stringify`, `text`, `urlencoded`, `multipart` or self implemented). [More info](#body-encoding).
 * `{Number} maxRetries=0` — Max number of retries allowed for the request
 * `{Function} onretry(reason Error, retryCount Number)` — called when retry happens. By default it does nothing. As an example, you can pass a function that logs a warning.
 * `{Number} timeout=500` — timeout from the moment, when a socket was given by a pool manager.
@@ -49,33 +49,31 @@ All parameters are optional.
 ## Body encoding
 
 Converts `body` to corresponding format and sets `Content-type` header.
-Supported variants:
-* `stringify` - Will apply `JSON.stringify` if `Object` passed to `body` (otherwise `text` encoder will be used). Accepts `Object`.
-* `text` - Converts `body` to `String`. Accepts all types.
-* `urlencoded` - Converts `body` to query string. Accepts `Object`.
-* `multipart` - Formats `body` according to [multipart/form-data spec](http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.2). Accepts `Object` (or `Buffer` object).
-If you pass `Buffer`, `mime-type` will be `application/octet-stream` and `filename` wil be `param name`.
+Supported options:
+* `stringify` — Applies `JSON.stringify` if `Object` was passed to `body` (otherwise `text` encoder will be used). Accepts `Object`.
+* `text` — Converts `body` to `String`. Accepts all types.
+* `urlencoded` — Converts `body` to query string. Accepts `Object`.
+* `multipart` — Formats `body` according to [multipart/form-data spec](http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.2). Accepts `Object` (or `Buffer` object).
+If you pass `Buffer`, `mime-type` will be `application/octet-stream` and `filename` will be equal to `body` parameter name.
 
-Otherwise, you can pass file `Object` with `mime` type, `filename` and file `data`:
-
+Otherwise, you can pass additional info (mime-type and filaname) with file data:
 ```javascript
-	param_name : { filename : 'image.jpg', mime : 'image/jpeg', data : <Buffer> }
+param_name : { filename : 'image.jpg', mime : 'image/jpeg', data : <Buffer> }
 ```
 
-If not existent body encoder passed - `BODY_ENCODER_NOT_EXIST` exception will be raised.
+`BODY_ENCODER_NOT_EXIST` exception will be thrown if passed unknown bodyEncoder.
 
-If param type is not accepted - `BODY_INCORRECT_TYPE` exception will be raised.
+`BODY_INCORRECT_TYPE` exception will be thrown if parameter type is not accepted.
 
-You can pass self implemented encoder - extend `Request.bodyEncoders` with `Function`:
-
+You can add self implemented encoder:
 ```javascript
-	Request.bodyEncoders.trimText = {
-		'header' : 'text/plain',
-		'type': '*',
-		'proccess': function(data) {
-			return String(data).trim();
-		}
+Request.bodyEncoders.trimText = {
+	'header' : 'text/plain',
+	'type': '*',
+	'proccess': function(data) {
+		return String(data).trim();
 	}
+}
 ```
 
 ## Response format
