@@ -187,7 +187,6 @@ module.exports = {
 
     'test body encoder => no file data for multipart' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
-            console.log(req.body);
             if (req.body && JSON.parse(req.body.file).filename === 'nope') {
                 res.statusCode = 200;
                 res.end(RESPONSE);
