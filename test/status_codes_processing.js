@@ -2,7 +2,8 @@ var Asker = require('../lib/asker'),
     ask = Asker,
     httpTest = require('./lib/http'),
     assert = require('chai').assert,
-    RESPONSE = 'response ok';
+    RESPONSE = 'response ok',
+    REQUEST_ID = 'test';
 
 function filter(code) {
     return {
@@ -49,8 +50,17 @@ module.exports = {
             res.end();
         });
 
-        ask({ port : server.port }, function(error) {
+        ask({ port : server.port, requestId : 'test' }, function(error) {
             assert.strictEqual(error.code, 904, '304 is not valid by default');
+            assert.ok(
+                (new RegExp([
+                    'Unexpected status code {CODE:304} in the response for request ',
+                    REQUEST_ID,
+                    ' in \\d+~\\d+ ms localhost:',
+                    server.port,
+                    '/'
+                ].join(''))).test(error.message),
+                'error message fulfilled');
 
             done();
         });
