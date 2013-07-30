@@ -46,36 +46,6 @@ All parameters are optional.
 * `{Function} statusFilter` — status codes processing, see [Response status codes processing](#response-status-codes-processing) section for details.
 * `{Object} agent` — http.Agent options, see [Connection pools tuning](#connection-pools-tuning) section for details.
 
-## Body encoding
-
-Converts `body` to corresponding format and sets `Content-type` header.
-Supported options:
-* `stringify` — Applies `JSON.stringify` if `Object` was passed to `body` (otherwise `text` encoder will be used). Accepts `Object`.
-* `text` — Converts `body` to `String`. Accepts all types.
-* `urlencoded` — Converts `body` to query string. Accepts `Object`.
-* `multipart` — Formats `body` according to [multipart/form-data spec](http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.2). Accepts `Object` (or `Buffer` object).
-If you pass `Buffer`, `mime-type` will be `application/octet-stream` and `filename` will be equal to `body` parameter name.
-
-Otherwise, you can pass additional info (mime-type and filaname) with file data:
-```javascript
-param_name : { filename : 'image.jpg', mime : 'image/jpeg', data : <Buffer> }
-```
-
-`BODY_ENCODER_NOT_EXIST` exception will be thrown if passed unknown bodyEncoder.
-
-`BODY_INCORRECT_TYPE` exception will be thrown if parameter type is not accepted.
-
-You can add self implemented encoder:
-```javascript
-Request.bodyEncoders.trimText = {
-	'header' : 'text/plain',
-	'type': '*',
-	'proccess': function(data) {
-		return String(data).trim();
-	}
-}
-```
-
 ## Response format
 
 Succesful requests will return data and additional information in the following format:
@@ -114,19 +84,82 @@ Let's make a quick example. Suppose, we want to accept only responses with `200`
 var ask = require('asker');
 
 function filter(code) {
-		return {
-				accept : ~[200, 201, 304].indexOf(code),
-				isRetryAllowed : 400 > code || code > 499
-		}
+    return {
+        accept : ~[200, 201, 304].indexOf(code),
+        isRetryAllowed : 400 > code || code > 499
+    }
 }
 
 ask({ host: 'data-feed.local', statusFilter : filter }, function(error, response) {
-    // @see http://npm.im/terror
+    // @see http://npm.im/terror for details about error codes
     if (error.code === ask.Error.CODES.UNEXPECTED_STATUS_CODE) {
         console.log('Response status code is not 200, 201 or 304');
     }
+
     // ...
 });
+```
+
+## Body encoding
+
+Body encoders converts `body` to corresponding format and sets `Content-type` header.
+
+### Built-in encoders
+
+* `stringify` — Applies `JSON.stringify` if `Object` was passed to `body` (otherwise `text` encoder will be used). Accepts `Object`.
+* `text` — Converts `body` to `String`. Accepts all types.
+* `urlencoded` — Converts `body` to query string. Accepts `Object`.
+* `multipart` — Formats `body` according to [multipart/form-data spec](http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.2). Accepts `Object` (or `Buffer` object).
+
+### Content-type
+
+If you pass `Buffer` as property value, then mime-type `application/octet-stream` and file name equal to property name applies.
+
+Otherwise, you can pass additional info (mime-type and filename) in the parameter description:
+
+```javascript
+ask({
+        bodyEncoder : 'multipart', // encoder name
+
+        body : {
+            'sample.mp3' : buffer, // an instance of the Buffer, "sample.mp3" will be used as file name
+
+            image : {
+                filename : 'image.jpg',
+                mime : 'image/jpeg',
+                data : image_buffer // an instance of the Buffer
+            }
+        }
+    },
+    function(error, response) {
+        /* ... */
+    });
+```
+
+### Exceptions
+
+Constructor or Asker call as function can throw following errors if you use body encoder:
+
+* `BODY_ENCODER_NOT_EXISTS` – unknown bodyEncoder has been passed;
+
+* `BODY_INCORRECT_TYPE` – `body` option's type is not correspond to the type which is allowed by encoder.
+
+### Custom encoders
+
+To implement you own body encoder, you must add a description object as the `Asker.bodyEncoders` property. Property name will be used as the encoder name.
+
+Example:
+
+```javascript
+var Asker = require('asker');
+
+Asker.bodyEncoders.trimText = {     // encoder name is 'trimText'
+    header : 'text/plain',          // 'content-type' header will be set to 'text/plain'
+    type : '*',                     // any type of the `body` options is allowed by this encoder
+    proccess: function(data) {      // encoding routine
+        return String(data).trim();
+    }
+}
 ```
 
 ## Connection pools tuning
