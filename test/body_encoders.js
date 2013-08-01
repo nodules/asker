@@ -2,9 +2,9 @@ var Asker = require('../lib/asker'),
     ask = Asker,
     httpTest = require('./lib/http'),
     assert = require('chai').assert,
-    fs = require('fs');
+    fs = require('fs'),
 
-var RESPONSE = 'response ok',
+    RESPONSE = 'response ok',
     filePath = 'test/pic.jpg',
     fileSize = fs.statSync(filePath).size,
     fileBuffer = fs.readFileSync(filePath),
@@ -40,7 +40,7 @@ var RESPONSE = 'response ok',
     };
 
 module.exports = {
-    'test body encoder => text' : httpTest(function(done, server) {
+    'body encoder "string"' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
             if (req.body && req.body === bodyText) {
                 res.statusCode = 200;
@@ -51,15 +51,15 @@ module.exports = {
             }
         });
 
-        ask({ port : server.port, method : 'post', bodyEncoding : 'text', body : bodyText }, function(error, response) {
-            assert.strictEqual(error, null, 'no errors occured');
+        ask({ port : server.port, method : 'post', bodyEncoding : 'string', body : bodyText }, function(error, response) {
+            assert.isNull(error, 'no errors occured');
             assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
 
             done();
         });
     }),
 
-    'test body encoder => stringify' : httpTest(function(done, server) {
+    'body encoder "json"' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
             if (req.body && req.body.data[0].id === bodyStringify.data[0].id) {
                 res.statusCode = 200;
@@ -70,15 +70,15 @@ module.exports = {
             }
         });
 
-        ask({ port : server.port, method : 'post', bodyEncoding : 'stringify', body : bodyStringify }, function(error, response) {
-            assert.strictEqual(error, null, 'no errors occured');
+        ask({ port : server.port, method : 'post', bodyEncoding : 'json', body : bodyStringify }, function(error, response) {
+            assert.isNull(error, 'no errors occured');
             assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
 
             done();
         });
     }),
 
-    'test body encoder => urlencoded' : httpTest(function(done, server) {
+    'body encoder "urlencoded"' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
             if (req.body && req.body.simple === bodyUrlencoded.simple) {
                 res.statusCode = 200;
@@ -90,14 +90,14 @@ module.exports = {
         });
 
         ask({ port : server.port, method : 'post', bodyEncoding : 'urlencoded', body : bodyUrlencoded }, function(error, response) {
-            assert.strictEqual(error, null, 'no errors occured');
+            assert.isNull(error, 'no errors occured');
             assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
 
             done();
         });
     }),
 
-    'test body encoder => multipart' : httpTest(function(done, server) {
+    'body encoder "multipart"' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
             if (req.body && JSON.parse(req.body.complex_param).key1 === bodyMultipart.complex_param.key1 &&
                 req.files && req.files.file1 && req.files.file1.size === fileSize) {
@@ -108,31 +108,20 @@ module.exports = {
                 res.end();
             }
         });
+
         ask({ port : server.port, method : 'post', bodyEncoding : 'multipart', body : bodyMultipart }, function(error, response) {
-            assert.strictEqual(error, null, 'no errors occured');
+            assert.isNull(error, 'no errors occured');
             assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
 
             done();
         });
     }),
 
-    'test body encoder => incorrect bodyEncoding' : httpTest(function(done, server) {
-        server.addTest(function(req, res) {
-            res.statusCode = 200;
-            res.end(RESPONSE);
-        });
-
-        try {
-            ask({ port : server.port, method : 'post', bodyEncoding : 'yrlenkoded', body : bodyUrlencoded }, function(error, response) {
-                assert.strictEqual(error, null, 'no errors occured');
-                assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
-
-                done();
-            });
-        } catch(e) {
-            done();
-        }
-    }),
+    'throw error on incorrect value of the option "bodyEncoding"' : function() {
+        assert.throw(function() {
+            new Asker({ bodyEncoding : 'duckduckandsend', body : bodyUrlencoded });
+        }, /Body encoder ".*" is not defined/);
+    },
 
     'test body encoder => incorrect body type' : httpTest(function(done, server) {
         server.addTest(function(req, res) {

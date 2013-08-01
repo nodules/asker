@@ -70,7 +70,7 @@ module.exports = {
             }
         });
 
-        ask({ port : server.port, method : 'post', body : test }, function(error, response) {
+        ask({ port : server.port, method : 'post', body : test, bodyEncoding : 'json' }, function(error, response) {
             assert.strictEqual(error, null, 'no errors occured');
             assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
 
@@ -89,7 +89,7 @@ module.exports = {
             }
         });
 
-        ask({ port : server.port, method : 'put', body : test }, function(error, response) {
+        ask({ port : server.port, method : 'put', body : test, bodyEncoding : 'json' }, function(error, response) {
             assert.strictEqual(error, null, 'no errors occured');
             assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
 
@@ -161,8 +161,7 @@ module.exports = {
         });
 
         ask({ port : server.port }, function(error, response) {
-            assert.strictEqual(error, null, 'no errors occured');
-
+            assert.isNull(error, 'no errors occured');
             assert.strictEqual(response.data.toString(), RESPONSE,
                 'chunked response compiled');
 

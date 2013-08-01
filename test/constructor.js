@@ -215,8 +215,8 @@ module.exports = {
                 body : { test : 1 }
             });
 
-        assert.strictEqual(typeof request.options.body, 'string',
-            'request body processed as for POST, PUT, PATCH methods');
+        assert.instanceOf(request.options.body, Buffer,
+            'request body buffer has been compiled');
     },
 
     'allow gzip option and header set' : function() {
@@ -297,7 +297,7 @@ module.exports = {
                 port : 80,
                 path : '/',
                 method : 'GET',
-                bodyEncoding : 'stringify',
+                bodyEncoding : 'string',
                 maxRetries : 0,
                 timeout : 500,
                 allowGzip : true,
