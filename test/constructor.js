@@ -171,22 +171,24 @@ module.exports = {
             QUERY_STRING = 'world=2&rainbow=unicorn',
 
             requestQueryObject = new Asker({
-                body : QUERY_OBJECT
+                body : QUERY_OBJECT,
+                bodyEncoding : 'json'
             }),
 
             requestQueryString = new Asker({
-                body : QUERY_STRING
+                body : QUERY_STRING,
+                bodyEncoding : 'string'
             });
 
-        assert.strictEqual(requestQueryObject.options.body, JSON.stringify(QUERY_OBJECT),
+        assert.deepEqual(requestQueryObject.options.body, new Buffer(JSON.stringify(QUERY_OBJECT), 'utf8'),
             'object stringified for request body');
 
-        assert.strictEqual(requestQueryString.options.body, QUERY_STRING,
+        assert.deepEqual(requestQueryString.options.body, new Buffer(QUERY_STRING, 'utf8'),
             'set string body without modification');
 
         assert.strictEqual(
             requestQueryString.options.headers['content-length'],
-            Buffer.byteLength(requestQueryString.options.body, 'utf8'),
+            requestQueryString.options.body.length,
             'content-length header set to calculated value');
     },
 
@@ -205,7 +207,7 @@ module.exports = {
 
         assert.notStrictEqual(
             request.options.headers['content-length'],
-            Buffer.byteLength(request.options.body, 'utf8'),
+            request.options.body.length,
             'content-length header value is not equal calculated value');
     },
 
