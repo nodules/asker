@@ -170,7 +170,7 @@ Note: `setContentType` sets "Content-Type" header only if header was not set bef
 
 ```javascript
 Asker.bodyEncoders.trimText = function(body, setContentType) {
-    setContentType('nyan/colorful');
+    setContentType('nyan/colorful', true);
 
     return 'Colorful nyan cat';
 };
