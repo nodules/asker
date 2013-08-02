@@ -65,7 +65,7 @@ Succesful requests will return data and additional information in the following 
 
 ## Response status codes processing
 
-When response status code is received, `asker` passes status code through the filter function, which should determine if this response code is acceptable or not and, if not acceptable, is it necessary to retry a request.
+When response status code is received, `asker` passes status code through the filter function, which should determine whether this response code is acceptable. And if not, whether is it necessary to retry a request.
 
 The only filter function argument is `code`:
 * `{Number} code` is a response status code provided by `asker`.
@@ -102,54 +102,50 @@ ask({ host: 'data-feed.local', statusFilter : filter }, function(error, response
 
 ## Body encoding
 
-Body encoders converts `body` to corresponding format and sets `Content-type` header.
+Body encoder converts `body` to corresponding format and sets `Content-type` header.
 
 ### Built-in encoders
 
-* `string` — Converts `body` to `String`. Accepts all types.
+* `string` — Used by default. Converts `body` to `String`. Accepts all types.
 * `json` — Applies `JSON.stringify` to the `body`. Accepts all types.
 * `urlencoded` — Converts `body` to query string. Accepts `Object`.
 * `multipart` — Formats `body` according to [multipart/form-data spec](http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.2). Accepts `Object` (or `Buffer` object).
 
 ### Content-type
 
-If you pass `Buffer` as property value, then mime-type `application/octet-stream` and file name equal to property name applies.
+If you pass `Buffer` as property value, mime-type `application/octet-stream` will be applied. And property name will be used as file name.
 
-Otherwise, you can pass additional info (mime-type and filename) in the parameter description:
-
+Otherwise, you can pass additional info (mime-type and filename) in parameter's description:
 ```javascript
 ask({
-        bodyEncoder : 'multipart', // encoder name
+    bodyEncoder : 'multipart', // encoder name
 
-        body : {
-            'sample.mp3' : buffer, // an instance of the Buffer, "sample.mp3" will be used as file name
+    body : {
+        'sample.mp3' : buffer, // an instance of Buffer, "sample.mp3" will be used as file name
 
-            image : {
-                filename : 'image.jpg',
-                mime : 'image/jpeg',
-                data : image_buffer // an instance of the Buffer
-            }
+        image : {
+            filename : 'image.jpg',
+            mime : 'image/jpeg',
+            data : image_buffer // an instance of Buffer
         }
-    },
-    function(error, response) {
-        /* ... */
-    });
+    }
+}, function(error, response) {
+    /* ... */
+});
 ```
 
 ### Exceptions
 
-Constructor or Asker call as function can throw following errors if you use body encoder:
+If you use body encoder, Asker can throw following errors:
 
-* `BODY_ENCODER_NOT_EXISTS` – unknown bodyEncoder has been passed;
-
-* `BODY_INCORRECT_TYPE` – `body` option's type is not correspond to the type which is allowed by encoder.
+* `BODY_ENCODER_NOT_EXISTS` – unknown `bodyEncoder` has been passed;
+* `BODY_INCORRECT_TYPE` – `body`'s type is not allowed by the encoder.
 
 ### Custom encoders
 
 To implement you own body encoder, you must add an encoding function as the `Asker.bodyEncoders` property. Property name will be used as the encoder name.
 
 Example:
-
 ```javascript
 var Asker = require('asker');
 
