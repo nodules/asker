@@ -1,6 +1,7 @@
 var http = require('http'),
     Vow = require('vow'),
-    form = new require('formidable').IncomingForm(),
+    Form = require('formidable').IncomingForm,
+    form = new Form(),
     PORT = process.env.ASKER_TEST_PORT || 10080;
 
 /**
@@ -55,9 +56,11 @@ TestServer.prototype.dispatcher = function(req, res) {
             });
         } else {
             req.body = '';
+
             req.on('data', function(d) {
                 req.body += d;
             });
+
             req.on('end', function() {
                 d(req, res);
             });
@@ -121,14 +124,12 @@ function httpTest(testFn) {
             var promise = Vow.promise();
 
             testFn(function() {
-                promise.fulfill(server);
+                server.close(mochaDone);
             }, server);
 
             return promise;
         })
-        .then(function(server) {
-            server.close(mochaDone);
-        });
+        .done();
     };
 }
 
