@@ -166,7 +166,7 @@ Asker.bodyEncoders.trimText = function(body, setContentType) {
 };
 ```
 
-Note: `setContentType` sets "Content-Type" header only if header was not set before. But you can force overriding by passing `true` as second argument:
+Note: `setContentType` sets `Content-Type` header only if header was not set before. But you can force overriding by passing `true` as second argument:
 
 ```javascript
 Asker.bodyEncoders.trimText = function(body, setContentType) {
