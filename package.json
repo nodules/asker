@@ -1,6 +1,6 @@
 {
   "name": "asker",
-  "version": "0.1.12",
+  "version": "0.2.0",
   "description": "http.request wrapper with request retries and http.Agent tuning",
   "main": "./lib/asker.js",
   "scripts": {
@@ -41,7 +41,7 @@
     "jshint": "2.1.x",
     "istanbul": "*",
     "jscs": "1.0.x",
-    "formidable": ">=1.0.14"
+    "formidable": "1.0.x"
   },
   "engines": {
     "node": ">=0.8.21"

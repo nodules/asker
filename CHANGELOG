@@ -1,3 +1,25 @@
+asker (0.2.0); urgency=low
+
+  * implement body encoding and support for custom encoders
+  https://github.com/nodules/asker/issues/9
+
+  * allow to pass callback to Request#execute method
+  https://github.com/nodules/asker/issues/59
+
+  * add jscs to npm test toolchain
+
+  * response.data must be a buffer, not a string
+  https://github.com/nodules/asker/issues/6
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Fri, 02 Aug 2013 19:09:27 +0400
+
+asker (0.1.13); urgency=low
+
+  * fulfill error message for code UNEXPECTED_STATUS_CODE
+  https://github.com/nodules/asker/issues/72
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Fri, 26 Jun 2013 11:07:15 +0400
+
 asker (0.1.12); urgency=critical
 
   * full code coverage by tests
