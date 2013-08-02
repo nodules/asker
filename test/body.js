@@ -179,7 +179,7 @@ module.exports = {
             var resBuffer = new Buffer(RESPONSE, 'utf8');
 
             // @todo: remove workaround for Node.js 0.8 when 0.8 support will be dropped
-            // Node.js 0.8 doesn't emit error if content-length value is less than actual contetn-length
+            // Node.js 0.8 doesn't emit error if content-length value is less than actual content-length
             if (error === null) {
                 assert.strictEqual(response.data.toString(), resBuffer.slice(0, resBuffer.length - 10).toString(),
                     'response recieved');
@@ -190,7 +190,10 @@ module.exports = {
                     'response is not recieved');
             }
 
-            done();
+            // @todo remove condition when 0.8 support will be dropped
+            if (error) {
+                done();
+            }
         });
     }),
 

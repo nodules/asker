@@ -97,6 +97,12 @@ module.exports = {
         });
     }),
 
+    'test body encoder "urlencoded" => incorrect body type' : function() {
+        assert.throw(function() {
+            ask({ bodyEncoding : 'urlencoded', body : bodyText });
+        }, /Unexpect type ".*" of the option "body" in the body encoder "urlencoded". Expected \{Object\}/);
+    },
+
     'body encoder "multipart"' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
             if (req.body && JSON.parse(req.body.complex_param).key1 === bodyMultipart.complex_param.key1 &&
@@ -123,23 +129,11 @@ module.exports = {
         }, /Body encoder ".*" is not defined/);
     },
 
-    'test body encoder => incorrect body type' : httpTest(function(done, server) {
-        server.addTest(function(req, res) {
-            res.statusCode = 200;
-            res.end(RESPONSE);
-        });
-
-        try {
-            ask({ port : server.port, method : 'post', bodyEncoding : 'multipart', body : bodyText }, function(error, response) {
-                assert.strictEqual(error, null, 'no errors occured');
-                assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
-
-                done();
-            });
-        } catch(e) {
-            done();
-        }
-    }),
+    'test body encoder "multipart" => incorrect body type' : function() {
+        assert.throw(function() {
+            ask({ bodyEncoding : 'multipart', body : bodyText });
+        }, /Unexpect type ".*" of the option "body" in the body encoder "multipart". Expected \{Object\}/);
+    },
 
     'test body encoder => manually set content-type' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
@@ -148,25 +142,6 @@ module.exports = {
         });
 
         ask({ port : server.port, method : 'post', headers : { 'content-type' : 'text/plain' }, body : bodyText }, function(error, response) {
-            assert.strictEqual(error, null, 'no errors occured');
-            assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
-
-            done();
-        });
-    }),
-
-    'test body encoder => already urlencoded body' : httpTest(function(done, server) {
-        server.addTest(function(req, res) {
-            if (req.body && req.body.param2 === 'b') {
-                res.statusCode = 200;
-                res.end(RESPONSE);
-            } else {
-                res.statusCode = 500;
-                res.end();
-            }
-        });
-
-        ask({ port : server.port, method : 'post', bodyEncoding : 'urlencoded', body : 'param1=a&param2=b' }, function(error, response) {
             assert.strictEqual(error, null, 'no errors occured');
             assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
 
