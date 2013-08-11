@@ -1,3 +1,9 @@
+asker (0.2.1); urgency=low
+
+  * change `terror` dependency version to 0.3.x
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Sun, 11 Aug 2013 19:21:31 +0400
+
 asker (0.2.0); urgency=low
 
   * implement body encoding and support for custom encoders
