@@ -118,7 +118,7 @@ If you pass `Buffer` as property value, mime-type `application/octet-stream` wil
 Otherwise, you can pass additional info (mime-type and filename) in parameter's description:
 ```javascript
 ask({
-    bodyEncoder : 'multipart', // encoder name
+    bodyEncoding : 'multipart', // encoder name
 
     body : {
         'sample.mp3' : buffer, // an instance of Buffer, "sample.mp3" will be used as file name
