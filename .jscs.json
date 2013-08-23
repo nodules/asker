@@ -55,12 +55,12 @@
     "disallowKeywords": [
         "with"
     ],
-    "disallowMulipleLineBreaks": true,
+    "disallowMultipleLineBreaks": true,
     "requireSpacesInsideObjectBrackets": "all",
     "disallowKeywordsOnNewLine": [
         "else"
     ],
-    "validateJsdoc": {
+    "validateJSDoc": {
         "checkParamNames": true,
         "requireParamTypes": true
     },
