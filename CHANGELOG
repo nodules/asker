@@ -1,3 +1,10 @@
+asker (0.2.2); urgency=low
+
+  * fix error name duplication in AskerError
+  * remove redundant UNKNOWN_ERROR code overriding
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Fri, 23 Aug 2013 13:50:35 +0400
+
 asker (0.2.1); urgency=low
 
   * change `terror` dependency version to 0.3.x
