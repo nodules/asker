@@ -1,6 +1,6 @@
 {
   "name": "asker",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "http.request wrapper with request retries and http.Agent tuning",
   "main": "./lib/asker.js",
   "scripts": {
