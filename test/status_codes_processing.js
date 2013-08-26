@@ -56,7 +56,7 @@ module.exports = {
                 (new RegExp([
                     'Unexpected status code {CODE:304} in the response for request ',
                     REQUEST_ID,
-                    ' in \\d+~\\d+ ms localhost:',
+                    ' in \\d+~\\d+ ms http://localhost:',
                     server.port,
                     '/'
                 ].join(''))).test(error.message),

@@ -1,4 +1,5 @@
 var Asker = require('../lib/asker'),
+    ask = Asker,
     httpTest = require('./lib/http'),
     assert = require('chai').assert;
 
@@ -75,6 +76,16 @@ module.exports = {
 
         request.execute(function() {
             assert.ok(true, 'callback called');
+
+            done();
+        });
+    },
+
+    'sanity check for https client' : function(done) {
+        ask({ url : 'https://mail.yandex.ru/', timeout : 3000 }, function(error, response) {
+            assert.isNull(error);
+            assert.strictEqual(response.statusCode, 200);
+            assert.ok(response.data.length > 0);
 
             done();
         });
