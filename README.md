@@ -110,6 +110,7 @@ Body encoder converts `body` to corresponding format and sets `Content-type` hea
 * `json` — Applies `JSON.stringify` to the `body`. Accepts all types.
 * `urlencoded` — Converts `body` to query string. Accepts `Object`.
 * `multipart` — Formats `body` according to [multipart/form-data spec](http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.2). Accepts `Object` (or `Buffer` object).
+* `raw` – Use body as is. Accepts instance of Buffer. Remember to set `content-type` header manually if required.
 
 ### Content-type
 
