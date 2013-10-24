@@ -1,3 +1,9 @@
+asker (0.3.0); urgency=low
+
+  * add "raw" body encoder to pass raw Buffer as request body
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Thu, 24 Oct 2013 21:23:05 +0400
+
 asker (0.2.2); urgency=low
 
   * fix error name duplication in AskerError
