@@ -7,6 +7,10 @@ function testRequestWithoutOptions(request) {
     assert.ok(request instanceof Asker, 'inheritance check');
 
     Object.keys(Asker.DEFAULT_OPTIONS).forEach(function(option) {
+        if (typeof Asker.DEFAULT_OPTIONS[option] === 'undefined') {
+            return;
+        }
+
         assert.strictEqual(
             request.options[option],
             Asker.DEFAULT_OPTIONS[option],
@@ -303,7 +307,15 @@ module.exports = {
                 maxRetries : 0,
                 timeout : 500,
                 allowGzip : true,
-                requestId : ''
+                requestId : '',
+                url : undefined,
+                headers : undefined,
+                query : undefined,
+                body : undefined,
+                onretry : undefined,
+                statusFilter : undefined,
+                queueTimeout : undefined,
+                agent : undefined
             },
             'DEFAULT_OPTIONS is ok');
     }
