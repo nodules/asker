@@ -1,3 +1,16 @@
+asker (0.3.2); urgency=low
+
+  * fix serialization of non-string literals in multipart encoder:
+    all non-string literals automatically casted as strings
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Fri, 06 Dec 2013 16:13:40 +0400
+
+asker (0.3.1); urgency=low
+
+  * allow to list options accepted by asker request constructor
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Fri, 1 Nov 2013 21:30:00 +0400
+
 asker (0.3.0); urgency=low
 
   * add "raw" body encoder to pass raw Buffer as request body
