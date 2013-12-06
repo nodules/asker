@@ -27,6 +27,7 @@ var Asker = require('../lib/asker'),
     },
     bodyMultipart = {
         simple_param : 'hey!',
+        non_string_literal : 32,
         complex_param : {
             key1 : 'one',
             key2 : 'two'
@@ -106,6 +107,7 @@ module.exports = {
     'body encoder "multipart"' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
             if (req.body && JSON.parse(req.body.complex_param).key1 === bodyMultipart.complex_param.key1 &&
+                req.body.non_string_literal === String(bodyMultipart.non_string_literal) &&
                 req.files && req.files.file1 && req.files.file1.size === fileSize) {
                 res.statusCode = 200;
                 res.end(RESPONSE);
