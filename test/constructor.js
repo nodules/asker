@@ -137,6 +137,18 @@ module.exports = {
             'parsed from url and directly passed options are equal');
     },
 
+    'default port for "http:" is 80' : function() {
+        var request = new Asker({ url : 'http://yandex.ru/' });
+
+        assert.strictEqual(request.options.port, 80);
+    },
+
+    'default port for "https:" is 443' : function() {
+        var request = new Asker({ url : 'https://yandex.ru/' });
+
+        assert.strictEqual(request.options.port, 443);
+    },
+
     'query and path args merging' : function() {
         var PATH = '/test?hello=1',
             PATH_2 = PATH + '&rainbow=bahamut',
@@ -299,8 +311,8 @@ module.exports = {
         assert.deepEqual(
             Asker.DEFAULT_OPTIONS,
             {
+                protocol : 'http:',
                 host : 'localhost',
-                port : 80,
                 path : '/',
                 method : 'GET',
                 bodyEncoding : 'string',
