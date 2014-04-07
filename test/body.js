@@ -99,7 +99,7 @@ module.exports = {
 
     'test request body => patch => parse querystring' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
-            if (req.body && qs.parse(req.body).changeCounter === '10' && req.method === 'PATCH') {
+            if (req.body && qs.parse(req.body.toString()).changeCounter === '10' && req.method === 'PATCH') {
                 res.statusCode = 200;
                 res.end();
             } else {
@@ -117,7 +117,7 @@ module.exports = {
 
     'test request body => delete => parse querystring' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
-            if (req.body && qs.parse(req.body).id === '100' && req.method === 'DELETE') {
+            if (req.body && qs.parse(req.body.toString()).id === '100' && req.method === 'DELETE') {
                 res.statusCode = 200;
                 res.end();
             } else {

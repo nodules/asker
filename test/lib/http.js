@@ -55,10 +55,10 @@ TestServer.prototype.dispatcher = function(req, res) {
                 }
             });
         } else {
-            req.body = '';
+            req.body = new Buffer(0);
 
             req.on('data', function(d) {
-                req.body += d;
+                req.body = Buffer.concat([ req.body, d ], req.body.length + d.length);
             });
 
             req.on('end', function() {

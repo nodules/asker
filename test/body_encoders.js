@@ -40,10 +40,47 @@ var Asker = require('../lib/asker'),
         }
     };
 
+function isBuffersContentEqual(b1, b2) {
+    if ( ! Buffer.isBuffer(b1) || ! Buffer.isBuffer(b2) || b1.length !== b2.length) {
+        return false;
+    }
+
+    for (var i = 0; i < b1.length; i++) {
+        if (b1[i] !== b2[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 module.exports = {
+    'body encoder "raw"' : httpTest(function(done, server) {
+        server.addTest(function(req, res) {
+            res.statusCode = isBuffersContentEqual(req.body, fileBuffer) ? 200 : 500;
+            res.end();
+        });
+
+        ask({ port : server.port, method : 'post', bodyEncoding : 'raw', body : fileBuffer },
+            function(error, response) {
+                assert.strictEqual(response.statusCode, 200);
+                done();
+            });
+    }),
+
+    'body encoder "raw" shoudl throw an error if `body` is not a Buffer' : httpTest(function(done, server) {
+        try {
+            ask({ port : server.port, method : 'post', bodyEncoding : 'raw', body : 'not a buffer' },
+                function() {});
+        } catch (error) {
+            assert.strictEqual(error.code, Asker.Error.CODES.UNEXPECTED_BODY_TYPE);
+            done();
+        }
+    }),
+
     'body encoder "string"' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
-            if (req.body && req.body === bodyText) {
+            if (req.body && req.body.toString() === bodyText) {
                 res.statusCode = 200;
                 res.end(RESPONSE);
             } else {
