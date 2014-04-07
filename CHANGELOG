@@ -1,3 +1,9 @@
+asker (0.4.0); urgency=low
+
+  * add some support for https (be careful with agents usage for https)
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Mon, 07 Apr 2014 14:55:13 +0400
+
 asker (0.3.2); urgency=low
 
   * fix serialization of non-string literals in multipart encoder:
