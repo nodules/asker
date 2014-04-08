@@ -1,3 +1,9 @@
+asker (0.4.1); urgency=low
+
+  * return 'Request.DEFAULT_OPTIONS.port' which was lost on https merge
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Tue, 08 Apr 2014 10:00:22 +0400
+
 asker (0.4.0); urgency=low
 
   * add some support for https (be careful with agents usage for https)

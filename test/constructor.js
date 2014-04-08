@@ -327,7 +327,8 @@ module.exports = {
                 onretry : undefined,
                 statusFilter : undefined,
                 queueTimeout : undefined,
-                agent : undefined
+                agent : undefined,
+                port : undefined
             },
             'DEFAULT_OPTIONS is ok');
     }
