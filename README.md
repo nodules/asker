@@ -31,7 +31,8 @@ All parameters are optional.
 * `{String} host="localhost"`
 * `{Number} port=80`
 * `{String} path="/"`
-* `{String} url` — Shorthand alternative for `host`, `port` and `path` options
+* `{String} protocol="http:"` — `http:` or `https:`
+* `{String} url` — Shorthand alternative for `protocol`, `host`, `port` and `path` options
 * `{String} method="GET"`
 * `{Object} headers` — HTTP headers
 * `{Object} query` — Query params
