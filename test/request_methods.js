@@ -84,7 +84,7 @@ module.exports = {
 
         request.execute();
 
-        assert(contimer.stop(request, 'execution').time >= 0, '#execute starts "execution" timer');
+        assert(contimer.stop(request, request.buildTimerId('execution')).time >= 0, '#execute starts "execution" timer');
     },
 
     '#getTimers returns `NaN` if timers was not resolved' : function() {
@@ -98,7 +98,7 @@ module.exports = {
         var request = new Asker({ port : server.port });
 
         server.addTest(function(req, res) {
-            assert.strictEqual(typeof contimer.stop(request, 'network').time, 'number',
+            assert.strictEqual(typeof contimer.stop(request, request.buildTimerId('network')).time, 'number',
                 'network was started on request start');
 
             res.end();
