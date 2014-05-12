@@ -1,3 +1,15 @@
+asker (0.4.3); urgency=low
+
+  * use `requestId` to form the contimer timers IDs
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Mon, 12 May 2014 18:40:20 +0400
+
+asker (0.4.2); urgency=low
+
+  * use contimer module to measure requests execution and network time
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Mon, 12 May 2014 13:40:20 +0400
+
 asker (0.4.1); urgency=low
 
   * return 'Request.DEFAULT_OPTIONS.port' which was lost on https merge
