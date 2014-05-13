@@ -1,3 +1,9 @@
+asker (0.4.4); urgency=low
+
+  * fix broken timings in the error messages on failed retries
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Tue, 13 May 2014 15:22:37 +0400
+
 asker (0.4.3); urgency=low
 
   * use `requestId` to form the contimer timers IDs
