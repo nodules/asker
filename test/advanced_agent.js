@@ -195,5 +195,10 @@ module.exports = {
 
         assert.strictEqual(Object.keys(AdvancedAgent.pool).length, 1,
             'only 1 advanced agent in the agents pool');
+    },
+
+    'Request.getAgent() should returns `false` if `options.agent` equals to `false`' : function() {
+        assert.strictEqual(Asker.getAgent(new Asker({ agent : false })), false,
+            'getAgent returns `false`');
     }
 };
