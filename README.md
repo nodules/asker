@@ -45,7 +45,7 @@ All parameters are optional.
 * `{Number} queueTimeout=timeout+50` — timeout from the moment, when asker initiated the request. Useful if pool manager failed to provide a socket for any reason.
 * `{Boolean} allowGzip=true` — allows response compression with gzip
 * `{Function} statusFilter` — status codes processing, see [Response status codes processing](#response-status-codes-processing) section for details.
-* `{Object} agent` — http.Agent options, see [Connection pools tuning](#connection-pools-tuning) section for details.
+* `{Object|false} agent` — http.Agent options, see [Connection pools tuning](#connection-pools-tuning) section for details.
 
 ## Response format
 
