@@ -89,5 +89,16 @@ module.exports = {
 
             done();
         });
+    },
+
+    'set options.agent to false' : function(done) {
+        ask({ url : 'https://mail.yandex.ru/', timeout : 3000, agent : false }, function(error, response) {
+            assert.isNull(error);
+            assert.strictEqual(response.statusCode, 200);
+            assert.ok(response.data.length > 0);
+            assert.strictEqual(response.meta.options.agent, false);
+
+            done();
+        });
     }
 };
