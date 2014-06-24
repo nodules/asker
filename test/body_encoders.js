@@ -37,7 +37,15 @@ var Asker = require('../lib/asker'),
             filename : 'pic1.jpg',
             mime : 'image/jpeg',
             data : fileBuffer
-        }
+        },
+        multiple_files : [
+            fileBuffer,
+            {
+                filename : 'pic1.jpg',
+                mime : 'image/jpeg',
+                data : fileBuffer
+            }
+        ]
     };
 
 function isBuffersContentEqual(b1, b2) {
