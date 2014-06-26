@@ -1,3 +1,9 @@
+asker (0.4.6); urgency=low
+
+  * implement encoding of multiple files for single parameter by multipart encoder
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Thu, 25 Jun 2014 17:23:01 +0400
+
 asker (0.4.5); urgency=low
 
   * add support for `false` value for the option `agent`
