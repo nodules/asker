@@ -136,6 +136,31 @@ ask({
 });
 ```
 
+If you need to send multiple files in single field wrap them in an array.
+Notice in that case each file should be represented as object with filename, mime and data keys:
+```javascript
+ask({
+    bodyEncoding : 'multipart',
+
+    body : {
+        images : [
+            {
+                filename : 'pic1.jpg',
+                mime : 'image/jpeg',
+                data : pic1_buffer
+            },
+            {
+                filename : 'pic2.jpg',
+                mime : 'image/jpeg',
+                data : pic2_buffer
+            }
+        ]
+    }
+}, function(error, response) {
+    /* ... */
+});
+```
+
 ### Exceptions
 
 If you use body encoder, Asker can throw following errors:

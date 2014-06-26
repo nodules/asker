@@ -1,7 +1,7 @@
 var http = require('http'),
     Vow = require('vow'),
     Form = require('formidable').IncomingForm,
-    form = new Form(),
+    form = new Form({ multiples : true }),
     PORT = process.env.ASKER_TEST_PORT || 10080;
 
 /**
