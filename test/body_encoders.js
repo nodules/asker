@@ -157,17 +157,24 @@ module.exports = {
 
     'body encoder "multipart"' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
-            if (req.body && JSON.parse(req.body.complex_param).key1 === bodyMultipart.complex_param.key1 &&
-                req.body.non_string_literal === String(bodyMultipart.non_string_literal) &&
-                req.files && req.files.file1 && req.files.file1.size === fileSize &&
-                Array.isArray(req.files.multiple_files) &&
-                req.files.multiple_files.length === bodyMultipart.multiple_files.length) {
-                res.statusCode = 200;
-                res.end(RESPONSE);
-            } else {
-                res.statusCode = 500;
-                res.end();
-            }
+            var body = req.body,
+                files = req.files,
+                complexParam;
+
+            assert.doesNotThrow(function() {
+                complexParam = JSON.parse(body.complex_param);
+            });
+            assert.strictEqual(complexParam.key1, bodyMultipart.complex_param.key1);
+            assert.strictEqual(body.non_string_literal, String(bodyMultipart.non_string_literal));
+            assert.strictEqual(files.file1.size, fileSize);
+            assert.isArray(files.multiple_files);
+            assert.strictEqual(files.multiple_files.length, bodyMultipart.multiple_files.length);
+            assert.strictEqual(files.multiple_files[0].name, bodyMultipart.multiple_files[0].filename);
+            assert.ok(isBuffersContentEqual(fs.readFileSync(files.multiple_files[1].path), bodyMultipart.multiple_files[1].data));
+            assert.ok(isBuffersContentEqual(fs.readFileSync(files.file0.path), bodyMultipart.file0));
+
+            res.statusCode = 200;
+            res.end(RESPONSE);
         });
 
         ask({ port : server.port, method : 'post', bodyEncoding : 'multipart', body : bodyMultipart }, function(error, response) {
