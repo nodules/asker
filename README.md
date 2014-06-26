@@ -137,22 +137,17 @@ ask({
 ```
 
 If you need to send multiple files in single field wrap them in an array.
-Notice in that case each file should be represented as object with filename, mime and data keys:
 ```javascript
 ask({
     bodyEncoding : 'multipart',
 
     body : {
         images : [
+            'sample.mp3' : buffer,
             {
-                filename : 'pic1.jpg',
+                filename : 'pic.jpg',
                 mime : 'image/jpeg',
-                data : pic1_buffer
-            },
-            {
-                filename : 'pic2.jpg',
-                mime : 'image/jpeg',
-                data : pic2_buffer
+                data : pic_buffer
             }
         ]
     }
