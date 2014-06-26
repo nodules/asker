@@ -6,8 +6,10 @@ var Asker = require('../lib/asker'),
 
     RESPONSE = 'response ok',
     filePath = 'test/pic.jpg',
+    file2Path = 'test/pic2.jpeg',
     fileSize = fs.statSync(filePath).size,
     fileBuffer = fs.readFileSync(filePath),
+    file2Buffer = fs.readFileSync(file2Path),
     bodyText = 'plain text test',
     bodyStringify = {
         'data' : [
@@ -37,7 +39,19 @@ var Asker = require('../lib/asker'),
             filename : 'pic1.jpg',
             mime : 'image/jpeg',
             data : fileBuffer
-        }
+        },
+        multiple_files : [
+            {
+                filename : 'pic1.jpg',
+                mime : 'image/jpeg',
+                data : fileBuffer
+            },
+            {
+                filename : 'pic2.jpg',
+                mime : 'image/jpeg',
+                data : file2Buffer
+            }
+        ]
     };
 
 function isBuffersContentEqual(b1, b2) {
@@ -145,7 +159,9 @@ module.exports = {
         server.addTest(function(req, res) {
             if (req.body && JSON.parse(req.body.complex_param).key1 === bodyMultipart.complex_param.key1 &&
                 req.body.non_string_literal === String(bodyMultipart.non_string_literal) &&
-                req.files && req.files.file1 && req.files.file1.size === fileSize) {
+                req.files && req.files.file1 && req.files.file1.size === fileSize &&
+                Array.isArray(req.files.multiple_files) &&
+                req.files.multiple_files.length === bodyMultipart.multiple_files.length) {
                 res.statusCode = 200;
                 res.end(RESPONSE);
             } else {
