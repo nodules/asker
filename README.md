@@ -19,7 +19,7 @@ ask({ host : 'ya.ru' }, function(error, response) {
         return error.log();
     }
 
-    console.log('Response retrieved in ' + response.meta.totalTime + 'ms');
+    console.log('Response retrieved in ' + response.meta.time.total + 'ms');
     console.log('==========\n', response.data, '\n==========');
 });
 ```
