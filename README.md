@@ -29,10 +29,11 @@ ask({ host : 'ya.ru' }, function(error, response) {
 All parameters are optional.
 
 * `{String} host="localhost"`
+* `{String} hostname` — the same as the `host`, used for compatibility with results of the `url.parse()`. Have higher priority than the `host`.
 * `{Number} port=80`
 * `{String} path="/"`
 * `{String} protocol="http:"` — `http:` or `https:`
-* `{String} url` — Shorthand alternative for `protocol`, `host`, `port` and `path` options
+* `{String} url` — Shorthand alternative for `protocol`, `hostname`, `port` and `path` options
 * `{String} method="GET"`
 * `{Object} headers` — HTTP headers
 * `{Object} query` — Query params
