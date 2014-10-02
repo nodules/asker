@@ -31,6 +31,9 @@ function testRequestWithoutOptions(request) {
 
     assert.strictEqual(typeof request.options.body, 'undefined',
         'no request body by default');
+
+    assert.strictEqual(request.options.hostname, request.options.host,
+        'hostname option is same as host option');
 }
 
 module.exports = {
@@ -78,6 +81,9 @@ module.exports = {
         assert.strictEqual(request.options.host, HOST,
             'host option setted properly');
 
+        assert.strictEqual(request.options.hostname, HOST,
+            'hostname option setted properly');
+
         assert.strictEqual(request.options.port, PORT,
             'port option setted properly');
 
@@ -91,6 +97,30 @@ module.exports = {
 
         assert.strictEqual(request._onretry, onretry,
             '"onretry" callback setted properly');
+    },
+
+    'hostname option' : function() {
+        var HOSTNAME = 'yandex.com',
+            HOST = 'none',
+            PORT = 8080,
+            PATH = '/',
+            URL = 'http://' + HOSTNAME + ':' + PORT + PATH,
+
+            request = new Asker({
+                hostname : HOSTNAME,
+                host : HOST,
+                port : PORT,
+                path : PATH
+            });
+
+        assert.strictEqual(request.options.host, HOST,
+            '`host` option setted properly');
+
+        assert.strictEqual(request.options.hostname, HOSTNAME,
+            '`hostname` option setted properly');
+
+        assert.strictEqual(request.getUrl(), URL,
+            '`getUrl()` method uses `hostname` option');
     },
 
     'url option' : function() {
