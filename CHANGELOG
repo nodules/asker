@@ -1,3 +1,12 @@
+asker (0.5.0); urgency=low
+
+  * implements `hostname` option which is the same as `host` and introduced
+    to support results of `url.parse()` as options for asker.
+    `hostname` has higher priority than `host` if both passed.
+  * updates terror module version to 0.4.x
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Fri, 03 Oct 2014 16:10:12 +0300
+
 asker (0.4.6); urgency=low
 
   * implement encoding of multiple files for single parameter by multipart encoder
