@@ -51,7 +51,7 @@ module.exports = {
         });
 
         ask({ port : server.port, requestId : 'test' }, function(error) {
-            assert.strictEqual(error.code, 904, '304 is not valid by default');
+            assert.strictEqual(error.code, Asker.Error.CODES.UNEXPECTED_STATUS_CODE, '304 is not valid by default');
             assert.ok(
                 (new RegExp([
                     'Unexpected status code {CODE:304} in the response for request ',
@@ -73,7 +73,7 @@ module.exports = {
         });
 
         ask({ port : server.port }, function(error) {
-            assert.strictEqual(error.code, 904, '404 is not valid by default');
+            assert.strictEqual(error.code, Asker.Error.CODES.UNEXPECTED_STATUS_CODE, '404 is not valid by default');
 
             done();
         });
@@ -86,7 +86,7 @@ module.exports = {
         });
 
         ask({ port : server.port }, function(error) {
-            assert.strictEqual(error.code, 904, '500 is not valid by default');
+            assert.strictEqual(error.code, Asker.Error.CODES.UNEXPECTED_STATUS_CODE, '500 is not valid by default');
 
             done();
         });
