@@ -47,7 +47,7 @@ module.exports = {
         });
 
         ask({ port : server.port, maxRetries : 1 }, function(error) {
-            assert.strictEqual(error.code, 907, 'retries limit exceeded');
+            assert.strictEqual(error.code, Asker.Error.CODES.RETRIES_LIMIT_EXCEEDED, 'retries limit exceeded');
 
             done();
         });
@@ -89,7 +89,7 @@ module.exports = {
         });
 
         ask({ port : server.port, maxRetries : 1, statusFilter : filter }, function(error) {
-            assert.strictEqual(error.code, 907, 'retries limit exceeded');
+            assert.strictEqual(error.code, Asker.Error.CODES.RETRIES_LIMIT_EXCEEDED, 'retries limit exceeded');
 
             done();
         });
