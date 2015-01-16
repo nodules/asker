@@ -1,4 +1,8 @@
-# Asker [![Build Status](https://secure.travis-ci.org/nodules/asker.png)](http://travis-ci.org/nodules/asker)
+Asker [![NPM version][npm-image]][npm-link] [![Build status][build-image]][build-link]
+=====
+
+[![Dependency status][deps-image]][deps-link]
+[![devDependency status][devdeps-image]][devdeps-link]
 
 Asker is a wrapper for `http.request` method, which incorporates:
 * response deflating using gzip,
@@ -234,3 +238,11 @@ Asker produces errors using [Terror](http://npm.im/terror), so you can setup you
 If you already use Terror and created a logger for Terror itself, you shouldn't setup it again for AskerError.
 
 `AskerError` class is available via `request('asker').Error` property. So you can, for example, localize error messages or customize it in your own way.
+[npm-image]: https://img.shields.io/npm/v/asker.svg?style=flat
+[npm-link]: https://npmjs.org/package/asker
+[build-image]: https://img.shields.io/travis/nodules/asker.svg?style=flat
+[build-link]: https://travis-ci.org/nodules/asker
+[deps-image]: https://img.shields.io/david/nodules/asker.svg?style=flat
+[deps-link]: https://david-dm.org/nodules/asker
+[devdeps-image]: https://img.shields.io/david/dev/nodules/asker.svg?style=flat
+[devdeps-link]: https://david-dm.org/nodules/asker#info=peerDependencies
