@@ -1,7 +1,8 @@
 var Asker = require('../lib/asker'),
     ask = Asker,
     httpTest = require('./lib/http'),
-    assert = require('chai').assert;
+    assert = require('chai').assert,
+    REQUEST_ID = 'test';
 
 function filter(code) {
     return {
@@ -46,8 +47,18 @@ module.exports = {
             res.end();
         });
 
-        ask({ port : server.port, maxRetries : 1 }, function(error) {
+        ask({ port : server.port, maxRetries : 1, requestId : REQUEST_ID }, function(error) {
             assert.strictEqual(error.code, Asker.Error.CODES.RETRIES_LIMIT_EXCEEDED, 'retries limit exceeded');
+
+            assert.ok(
+                (new RegExp([
+                    'Retries limit {LIMIT:1} exceeded for request ',
+                    REQUEST_ID,
+                    ' in \\d+~\\d+ ms http://localhost:',
+                    server.port,
+                    '/'
+                ].join(''))).test(error.message),
+                'error message fulfilled');
 
             done();
         });
