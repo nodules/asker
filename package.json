@@ -32,6 +32,7 @@
   ],
   "readmeFilename": "README.md",
   "dependencies": {
+    "circular-json": "^0.1.6",
     "terror": "^1.0.0",
     "extend": "2.0.0",
     "contimer": "^1.0.1"
