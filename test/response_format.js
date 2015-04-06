@@ -20,9 +20,9 @@ module.exports = {
 
             assert.strictEqual(response.statusCode, 200, 'statusCode is present and equals 200');
 
-            assert.strictEqual(typeof response.meta.time.network, 'number', 'network time is present and is a number');
-            assert.strictEqual(typeof response.meta.time.total, 'number', 'total time is present and is a number');
-            assert.ok(response.meta.time.total >= response.meta.time.network,
+            assert(response.meta.time.network >= 0, 'network time is present and is a number');
+            assert(response.meta.time.total >= 0, 'total time is present and is a number');
+            assert(response.meta.time.total >= response.meta.time.network,
                 'total time is greater or equals total time');
 
             assert.strictEqual(response.meta.retries.used, 0, 'no retries were used');

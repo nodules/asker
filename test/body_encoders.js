@@ -6,8 +6,10 @@ var Asker = require('../lib/asker'),
 
     RESPONSE = 'response ok',
     filePath = 'test/pic.jpg',
+    file2Path = 'test/pic2.jpeg',
     fileSize = fs.statSync(filePath).size,
     fileBuffer = fs.readFileSync(filePath),
+    file2Buffer = fs.readFileSync(file2Path),
     bodyText = 'plain text test',
     bodyStringify = {
         'data' : [
@@ -27,6 +29,7 @@ var Asker = require('../lib/asker'),
     },
     bodyMultipart = {
         simple_param : 'hey!',
+        non_string_literal : 32,
         complex_param : {
             key1 : 'one',
             key2 : 'two'
@@ -36,13 +39,62 @@ var Asker = require('../lib/asker'),
             filename : 'pic1.jpg',
             mime : 'image/jpeg',
             data : fileBuffer
-        }
+        },
+        multiple_files : [
+            {
+                filename : 'pic1.jpg',
+                mime : 'image/jpeg',
+                data : fileBuffer
+            },
+            {
+                filename : 'pic2.jpg',
+                mime : 'image/jpeg',
+                data : file2Buffer
+            }
+        ]
     };
 
+function isBuffersContentEqual(b1, b2) {
+    if ( ! Buffer.isBuffer(b1) || ! Buffer.isBuffer(b2) || b1.length !== b2.length) {
+        return false;
+    }
+
+    for (var i = 0; i < b1.length; i++) {
+        if (b1[i] !== b2[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 module.exports = {
+    'body encoder "raw"' : httpTest(function(done, server) {
+        server.addTest(function(req, res) {
+            res.statusCode = isBuffersContentEqual(req.body, fileBuffer) ? 200 : 500;
+            res.end();
+        });
+
+        ask({ port : server.port, method : 'post', bodyEncoding : 'raw', body : fileBuffer },
+            function(error, response) {
+                assert.strictEqual(response.statusCode, 200);
+                done();
+            });
+    }),
+
+    'body encoder "raw" shoudl throw an error if `body` is not a Buffer' : httpTest(function(done, server) {
+        try {
+            ask({ port : server.port, method : 'post', bodyEncoding : 'raw', body : 'not a buffer' },
+                function() {});
+        } catch (error) {
+            assert.strictEqual(error.code, Asker.Error.CODES.UNEXPECTED_BODY_TYPE);
+            done();
+        }
+    }),
+
     'body encoder "string"' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
-            if (req.body && req.body === bodyText) {
+            if (req.body && req.body.toString() === bodyText) {
                 res.statusCode = 200;
                 res.end(RESPONSE);
             } else {
@@ -105,14 +157,24 @@ module.exports = {
 
     'body encoder "multipart"' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
-            if (req.body && JSON.parse(req.body.complex_param).key1 === bodyMultipart.complex_param.key1 &&
-                req.files && req.files.file1 && req.files.file1.size === fileSize) {
-                res.statusCode = 200;
-                res.end(RESPONSE);
-            } else {
-                res.statusCode = 500;
-                res.end();
-            }
+            var body = req.body,
+                files = req.files,
+                complexParam;
+
+            assert.doesNotThrow(function() {
+                complexParam = JSON.parse(body.complex_param);
+            });
+            assert.strictEqual(complexParam.key1, bodyMultipart.complex_param.key1);
+            assert.strictEqual(body.non_string_literal, String(bodyMultipart.non_string_literal));
+            assert.strictEqual(files.file1.size, fileSize);
+            assert.isArray(files.multiple_files);
+            assert.strictEqual(files.multiple_files.length, bodyMultipart.multiple_files.length);
+            assert.strictEqual(files.multiple_files[0].name, bodyMultipart.multiple_files[0].filename);
+            assert.ok(isBuffersContentEqual(fs.readFileSync(files.multiple_files[1].path), bodyMultipart.multiple_files[1].data));
+            assert.ok(isBuffersContentEqual(fs.readFileSync(files.file0.path), bodyMultipart.file0));
+
+            res.statusCode = 200;
+            res.end(RESPONSE);
         });
 
         ask({ port : server.port, method : 'post', bodyEncoding : 'multipart', body : bodyMultipart }, function(error, response) {

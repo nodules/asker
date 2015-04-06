@@ -35,6 +35,7 @@ module.exports = {
     }),
 
     'retries => default => fail 500-500' : httpTest(function(done, server) {
+        var requestId = 'test';
 
         server.addTest(function(req, res) {
             res.statusCode = 500;
@@ -46,8 +47,18 @@ module.exports = {
             res.end();
         });
 
-        ask({ port : server.port, maxRetries : 1 }, function(error) {
-            assert.strictEqual(error.code, 907, 'retries limit exceeded');
+        ask({ port : server.port, maxRetries : 1, requestId : requestId }, function(error) {
+            assert.strictEqual(error.code, Asker.Error.CODES.RETRIES_LIMIT_EXCEEDED, 'retries limit exceeded');
+
+            assert.ok(
+                (new RegExp(
+                    'Retries limit {LIMIT:1} exceeded for request ' +
+                    requestId +
+                    ' in \\d+~\\d+ ms http://localhost:' +
+                    server.port +
+                    '/'
+                )).test(error.message),
+                'error message fulfilled');
 
             done();
         });
@@ -89,7 +100,7 @@ module.exports = {
         });
 
         ask({ port : server.port, maxRetries : 1, statusFilter : filter }, function(error) {
-            assert.strictEqual(error.code, 907, 'retries limit exceeded');
+            assert.strictEqual(error.code, Asker.Error.CODES.RETRIES_LIMIT_EXCEEDED, 'retries limit exceeded');
 
             done();
         });

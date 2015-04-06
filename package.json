@@ -1,10 +1,10 @@
 {
   "name": "asker",
-  "version": "0.2.1",
+  "version": "0.6.1",
   "description": "http.request wrapper with request retries and http.Agent tuning",
   "main": "./lib/asker.js",
   "scripts": {
-    "test": "./node_modules/.bin/jshint --config ./.jshintrc ./lib ./test && ./node_modules/.bin/jscs ./lib ./test && ./node_modules/.bin/istanbul cover _mocha -- -u exports -R spec ./test"
+    "test": "jshint --config .jshintrc lib test && jscs lib test && mocha -u exports -R spec && if [ ! -n \"$NO_COVERAGE\" ]; then istanbul cover _mocha -- -u exports -R dot test; fi"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,8 @@
   ],
   "contributors": [
     "Alexey Rybakov <alexrybakov@yandex.ru> (https://github.com/flackus)",
-    "Ivan Lukashov <webstalk3r@gmail.com>"
+    "Ivan Lukashov <webstalk3r@gmail.com> (https://github.com/wayx)",
+    "Anton Kalinin <hurricanebox@gmail.com> (https://github.com/antonKalinin)"
   ],
   "licenses": [
     {
@@ -32,17 +33,18 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "circular-json": "^0.1.6",
-    "extend": "1.1.3",
-    "terror": "0.3.x"
+    "terror": "^1.0.0",
+    "extend": "2.0.0",
+    "contimer": "^1.0.1"
   },
   "devDependencies": {
-    "mocha": "1.11.x",
-    "chai": "1.7.x",
-    "vow": "0.3.x",
-    "jshint": "2.1.x",
+    "chai": "^1.10.0",
+    "formidable": "1.0.x",
     "istanbul": "*",
-    "jscs": "1.0.x",
-    "formidable": "1.0.x"
+    "jscs": "1.4.x",
+    "jshint": "2.1.x",
+    "mocha": "^2.0.1",
+    "vow": "0.3.x"
   },
   "engines": {
     "node": ">=0.8.21"

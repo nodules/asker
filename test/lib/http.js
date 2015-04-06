@@ -1,7 +1,6 @@
 var http = require('http'),
     Vow = require('vow'),
     Form = require('formidable').IncomingForm,
-    form = new Form(),
     PORT = process.env.ASKER_TEST_PORT || 10080;
 
 /**
@@ -32,6 +31,23 @@ TestServer.prototype.listen = function(callback) {
 };
 
 /**
+ * @returns {formidable.Form}
+ */
+function buildForm() {
+    var form = new Form({ multiples : true });
+
+    form.onPart = function(part) {
+        if (part.filename === undefined && part.mime === 'application/octet-stream') {
+            // kaero: dirty hack to parse buffers w/o filenames as files without original name
+            part.filename = '';
+        }
+        this.handlePart(part);
+    };
+
+    return form;
+}
+
+/**
  * @param {http.IncomingMessage} req
  * @param {http.ServerResponse} res
  */
@@ -44,7 +60,7 @@ TestServer.prototype.dispatcher = function(req, res) {
     } else {
         // Use formidable parser when getting typed content (urlencoded, json, multipart)
         if (/(urlencoded|json|multipart)/.test(req.headers['content-type'])) {
-            form.parse(req, function(err, fields, files) {
+            buildForm().parse(req, function(err, fields, files) {
                 if (err) {
                     res.statusCode = 500;
                     res.end('formidable error: ' + err);
@@ -55,10 +71,10 @@ TestServer.prototype.dispatcher = function(req, res) {
                 }
             });
         } else {
-            req.body = '';
+            req.body = new Buffer(0);
 
             req.on('data', function(d) {
-                req.body += d;
+                req.body = Buffer.concat([ req.body, d ], req.body.length + d.length);
             });
 
             req.on('end', function() {

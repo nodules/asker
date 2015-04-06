@@ -1,4 +1,8 @@
-# Asker [![Build Status](https://secure.travis-ci.org/nodules/asker.png)](http://travis-ci.org/nodules/asker)
+Asker [![NPM version][npm-image]][npm-link] [![Build status][build-image]][build-link]
+=====
+
+[![Dependency status][deps-image]][deps-link]
+[![devDependency status][devdeps-image]][devdeps-link]
 
 Asker is a wrapper for `http.request` method, which incorporates:
 * response deflating using gzip,
@@ -19,7 +23,7 @@ ask({ host : 'ya.ru' }, function(error, response) {
         return error.log();
     }
 
-    console.log('Response retrieved in ' + response.meta.totalTime + 'ms');
+    console.log('Response retrieved in ' + response.meta.time.total + 'ms');
     console.log('==========\n', response.data, '\n==========');
 });
 ```
@@ -29,9 +33,11 @@ ask({ host : 'ya.ru' }, function(error, response) {
 All parameters are optional.
 
 * `{String} host="localhost"`
+* `{String} hostname` — the same as the `host`, used for compatibility with results of the `url.parse()`. Have higher priority than the `host`.
 * `{Number} port=80`
 * `{String} path="/"`
-* `{String} url` — Shorthand alternative for `host`, `port` and `path` options
+* `{String} protocol="http:"` — `http:` or `https:`
+* `{String} url` — Shorthand alternative for `protocol`, `hostname`, `port` and `path` options
 * `{String} method="GET"`
 * `{Object} headers` — HTTP headers
 * `{Object} query` — Query params
@@ -44,7 +50,7 @@ All parameters are optional.
 * `{Number} queueTimeout=timeout+50` — timeout from the moment, when asker initiated the request. Useful if pool manager failed to provide a socket for any reason.
 * `{Boolean} allowGzip=true` — allows response compression with gzip
 * `{Function} statusFilter` — status codes processing, see [Response status codes processing](#response-status-codes-processing) section for details.
-* `{Object} agent` — http.Agent options, see [Connection pools tuning](#connection-pools-tuning) section for details.
+* `{Object|false} agent` — http.Agent options, see [Connection pools tuning](#connection-pools-tuning) section for details.
 
 ## Response format
 
@@ -110,6 +116,7 @@ Body encoder converts `body` to corresponding format and sets `Content-type` hea
 * `json` — Applies `JSON.stringify` to the `body`. Accepts all types.
 * `urlencoded` — Converts `body` to query string. Accepts `Object`.
 * `multipart` — Formats `body` according to [multipart/form-data spec](http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.2). Accepts `Object` (or `Buffer` object).
+* `raw` – Use body as is. Accepts instance of Buffer. Remember to set `content-type` header manually if required.
 
 ### Content-type
 
@@ -128,6 +135,26 @@ ask({
             mime : 'image/jpeg',
             data : image_buffer // an instance of Buffer
         }
+    }
+}, function(error, response) {
+    /* ... */
+});
+```
+
+If you need to send multiple files in single field wrap them in an array.
+```javascript
+ask({
+    bodyEncoding : 'multipart',
+
+    body : {
+        images : [
+            'sample.mp3' : buffer,
+            {
+                filename : 'pic.jpg',
+                mime : 'image/jpeg',
+                data : pic_buffer
+            }
+        ]
     }
 }, function(error, response) {
     /* ... */
@@ -211,3 +238,11 @@ Asker produces errors using [Terror](http://npm.im/terror), so you can setup you
 If you already use Terror and created a logger for Terror itself, you shouldn't setup it again for AskerError.
 
 `AskerError` class is available via `request('asker').Error` property. So you can, for example, localize error messages or customize it in your own way.
+[npm-image]: https://img.shields.io/npm/v/asker.svg?style=flat
+[npm-link]: https://npmjs.org/package/asker
+[build-image]: https://img.shields.io/travis/nodules/asker.svg?style=flat
+[build-link]: https://travis-ci.org/nodules/asker
+[deps-image]: https://img.shields.io/david/nodules/asker.svg?style=flat
+[deps-link]: https://david-dm.org/nodules/asker
+[devdeps-image]: https://img.shields.io/david/dev/nodules/asker.svg?style=flat
+[devdeps-link]: https://david-dm.org/nodules/asker#info=peerDependencies

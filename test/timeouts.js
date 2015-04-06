@@ -14,7 +14,7 @@ module.exports = {
         });
 
         ask({ port : server.port }, function(error) {
-            assert.strictEqual(error.code, 903, 'socket timeout');
+            assert.strictEqual(error.code, Asker.Error.CODES.SOCKET_TIMEOUT, 'socket timeout');
 
             done();
         });
@@ -31,7 +31,7 @@ module.exports = {
         });
 
         ask({ port : server.port, timeout : 100 }, function(error) {
-            assert.strictEqual(error.code, 903, 'socket timeout');
+            assert.strictEqual(error.code, Asker.Error.CODES.SOCKET_TIMEOUT, 'socket timeout');
 
             done();
         });
@@ -73,7 +73,7 @@ module.exports = {
                     }
                 },
                 function(error) {
-                    assert.strictEqual(error.code, 902, 'queue timeout');
+                    assert.strictEqual(error.code, Asker.Error.CODES.QUEUE_TIMEOUT, 'queue timeout');
 
                     done();
                 });
