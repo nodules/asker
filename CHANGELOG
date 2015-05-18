@@ -1,3 +1,9 @@
+asker (0.6.2); urgency=low
+
+  * allow an instance of Agent as a value of the `agent` option.
+
+ -- Phillip Kovalev <twilightfeel@gmail.com>  Mon, 18 May 2015 19:36:03 +0300
+
 asker (0.6.1); urgency=low
 
   * fill 'execution' timer on exceeded retries (by Dmitry Sorin https://github.com/1999)
