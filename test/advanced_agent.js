@@ -200,5 +200,24 @@ module.exports = {
     'Request.getAgent() should returns `false` if `options.agent` equals to `false`' : function() {
         assert.strictEqual(Asker.getAgent(new Asker({ agent : false })), false,
             'getAgent returns `false`');
+    },
+
+    'Request.getAgent() should return `options.agent` if it\'s Agent-like object' : function() {
+        var customAgent = {
+            addRequest : function () {},
+            createSocket : function () {}
+        };
+
+        assert.strictEqual(Asker.getAgent(new Asker({ agent : customAgent })), customAgent,
+            'custom agent is returned for request with custom agent');
+    },
+
+    'Request.getAgent() should return http.globalAgent if `options.agent` is not Agent-like object' : function() {
+        var customAgent = {
+            addRequest : function () {}
+        };
+
+        assert.strictEqual(Asker.getAgent(new Asker({ agent : customAgent })), http.globalAgent,
+            'http.globalAgent is returned for request without custom agent');
     }
 };
