@@ -142,10 +142,10 @@ module.exports = {
         assert.strictEqual(requestUrl.options.url, URL,
             '`url` option setted properly');
 
-        delete requestUrl.options.url;
-
-        assert.deepEqual(requestHPP.options, requestUrl.options,
-            'options parsed from `url` and passed manually are equal');
+        ['host', 'path', 'port', 'path'].forEach(function(field) {
+            assert.strictEqual(requestHPP.options[field], requestUrl.options[field],
+                'options parsed from url and passed manually has the same `' + field + '` field');
+        });
     },
 
     'url without protocol' : function() {
@@ -161,10 +161,10 @@ module.exports = {
                 url : HOST + PATH
             });
 
-        delete requestUrl.options.url;
-
-        assert.deepEqual(requestUrl.options, requestHostPath.options,
-            'parsed from url and directly passed options are equal');
+        ['host', 'path', 'port', 'path'].forEach(function(field) {
+            assert.strictEqual(requestUrl.options[field], requestHostPath.options[field],
+                'parsed from url and directly passed options has the same `' + field + '` field');
+        });
     },
 
     'default port for "http:" is 80' : function() {

@@ -25,7 +25,7 @@ module.exports = {
                 { port : server.port },
                 function() {
                     assert.strictEqual(request.isRunning, false,
-                        'Request#isRunning equals false when request completed');
+                        'Request#isRunning is false when request completed');
 
                     done();
                 });
@@ -54,8 +54,8 @@ module.exports = {
     'Request#isRunning getter returns actual value of the private field _isRunning' : function(done) {
         var request = new Asker();
 
-        assert.strictEqual(typeof request._isRunning, 'undefined',
-            'default _isRunning state is "unefined"');
+        assert.strictEqual(request._isRunning, null,
+            'default _isRunning state is `null`');
 
         assert.strictEqual(request.isRunning, false,
             'value returned by isRunning getter equals private field value');

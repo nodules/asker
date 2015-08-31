@@ -5,6 +5,7 @@ var Asker = require('../lib/asker'),
     qs = require('querystring');
 
 var RESPONSE = 'response ok',
+    RESPONSE_BUFFER = new Buffer(RESPONSE, 'utf8'),
     test = {
         'data' : [
             { 'id' : 'AC',         'name' : 'AC' },
@@ -134,12 +135,10 @@ module.exports = {
     }),
 
     'chunked response body compilation' : httpTest(function(done, server) {
-        var responseBuf = new Buffer(RESPONSE, 'utf8');
-
         server.addTest(function(req, res) {
-            res.write(responseBuf.slice(0, 5));
-            res.write(responseBuf.slice(5, 10));
-            res.end(responseBuf.slice(10));
+            res.write(RESPONSE_BUFFER.slice(0, 5));
+            res.write(RESPONSE_BUFFER.slice(5, 10));
+            res.end(RESPONSE_BUFFER.slice(10));
         });
 
         ask({ port : server.port }, function(error, response) {
@@ -153,11 +152,9 @@ module.exports = {
     }),
 
     'response body compilation with recieved "content-length"' : httpTest(function(done, server) {
-        var responseBuf = new Buffer(RESPONSE, 'utf8');
-
         server.addTest(function(req, res) {
-            res.writeHead(200, { 'Content-length' : responseBuf.length });
-            res.end(responseBuf);
+            res.writeHead(200, { 'Content-length' : RESPONSE_BUFFER.length });
+            res.end(RESPONSE_BUFFER);
         });
 
         ask({ port : server.port }, function(error, response) {
@@ -176,12 +173,10 @@ module.exports = {
         });
 
         ask({ port : server.port }, function(error, response) {
-            var resBuffer = new Buffer(RESPONSE, 'utf8');
-
-            // @todo: remove workaround for Node.js 0.8 when 0.8 support will be dropped
-            // Node.js 0.8 doesn't emit error if content-length value is less than actual content-length
+            // @note kaero Node.js 0.8 doesn't emit error if content-length value is less than actual content-length
+            // @note narqo this is an issue in Node.js 0.10 ReadableStream implementation (see http://stackoverflow.com/questions/17370309/nodejs-gm-content-length-implementation-hangs-browser#comment38374611_17370309)
             if (error === null) {
-                assert.strictEqual(response.data.toString(), resBuffer.slice(0, resBuffer.length - 10).toString(),
+                assert.strictEqual(response.data.toString(), RESPONSE_BUFFER.slice(0, RESPONSE_BUFFER.length - 10).toString(),
                     'response recieved');
             } else {
                 assert.strictEqual(error.code, Asker.Error.CODES.HTTP_CLIENT_REQUEST_ERROR, 'http client error');
@@ -190,15 +185,13 @@ module.exports = {
                     'response is not recieved');
             }
 
-            // @todo remove condition when 0.8 support will be dropped
-            if (error) {
-                done();
-            }
+            done();
         });
     }),
 
     // @todo needs to be fixed
-    // if content-length recieved, then don't wait for more chunks
+    // if content-length received, then don't wait for more chunks
+    // @note narqo this is an issue in Node.js 0.10 ReadableStream implementation (see http://stackoverflow.com/questions/17370309/nodejs-gm-content-length-implementation-hangs-browser#comment38374611_17370309)
     'response body compilation with "content-length" more than actual content length' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
             res.writeHead(200, { 'Content-length' : Buffer.byteLength(RESPONSE, 'utf8') + 10 });
@@ -206,10 +199,15 @@ module.exports = {
         });
 
         ask({ port : server.port, timeout : 300 }, function(error, response) {
-            assert.strictEqual(error.code, Asker.Error.CODES.SOCKET_TIMEOUT, 'http client error');
+            if (error === null) {
+                assert.strictEqual(response.data.toString(), RESPONSE_BUFFER.slice(0, RESPONSE_BUFFER.length + 10).toString(),
+                    'response recieved');
+            } else {
+                assert.strictEqual(error.code, Asker.Error.CODES.SOCKET_TIMEOUT, 'http client error');
 
-            assert.strictEqual(typeof response, 'undefined',
-                'response is not recieved');
+                assert.strictEqual(typeof response, 'undefined',
+                    'response is not recieved');
+            }
 
             done();
         });

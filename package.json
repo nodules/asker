@@ -32,9 +32,10 @@
   ],
   "readmeFilename": "README.md",
   "dependencies": {
+    "contimer": "^1.0.1",
+    "object-assign": "^4.0.1",
     "terror": "^1.0.0",
-    "extend": "2.0.0",
-    "contimer": "^1.0.1"
+    "unzip-response": "^1.0.0"
   },
   "devDependencies": {
     "chai": "^1.10.0",

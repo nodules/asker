@@ -93,20 +93,6 @@ module.exports = {
                 '" event');
     },
 
-    'global and default pools sizes is 1024' : function() {
-        assert.strictEqual(http.globalAgent.maxSockets, 1024,
-            'http.globalAgent per host:port pair pools size is 1024');
-
-        assert.strictEqual(http.Agent.defaultMaxSockets, 1024,
-            'http.Agent per host:port pair pools size is 1024 by default');
-
-        assert.strictEqual(https.globalAgent.maxSockets, 1024,
-            'https.globalAgent per host:port pair pools size is 1024');
-
-        assert.strictEqual(https.Agent.defaultMaxSockets, 1024,
-            'https.Agent per host:port pair pools size is 1024 by default');
-    },
-
     'default agent for https connections is https.globalAgent' : function() {
         var request = new Asker({ url : 'https://yandex.ru/' });
 
@@ -138,7 +124,7 @@ module.exports = {
         }
 
         function testResponse(req, res) {
-            // return inaccepatble code to instigate SOCKET_REMOVED event
+            // return unacceptable code to instigate SOCKET_REMOVED event
             res.statusCode = 404;
             res.end();
         }
