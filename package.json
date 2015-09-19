@@ -42,13 +42,13 @@
     "unzip-response": "^1.0.0"
   },
   "devDependencies": {
-    "chai": "^1.10.0",
+    "chai": "^3.2.0",
     "formidable": "1.0.x",
     "istanbul": "*",
     "jscs": "1.4.x",
     "jshint": "2.1.x",
     "mocha": "^2.0.1",
-    "vow": "0.3.x"
+    "vow": "^0.4.0"
   },
   "engines": {
     "node": ">=0.8.21"

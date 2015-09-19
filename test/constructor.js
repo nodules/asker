@@ -1,5 +1,5 @@
 var url = require('url'),
-    extend = require('extend'),
+    assign = require('object-assign'),
     Asker = require('../lib/asker'),
     assert = require('chai').assert;
 
@@ -92,7 +92,7 @@ module.exports = {
 
         assert.deepEqual(
             request.options.headers,
-            extend(true, {}, HEADERS, { 'accept-encoding' : 'gzip, *' }),
+            assign(true, {}, HEADERS, { 'accept-encoding' : 'gzip, *' }),
             'headers option setted properly');
 
         assert.strictEqual(request._onretry, onretry,
@@ -199,12 +199,12 @@ module.exports = {
 
         assert.deepEqual(
             url.parse(requestMergedPath.options.path, true).query,
-            extend(true, {}, url.parse(PATH, true).query, QUERY),
+            assign(true, {}, url.parse(PATH, true).query, QUERY),
             'path and query params merging without overriding');
 
         assert.deepEqual(
             url.parse(requestOverridenQuery.options.path, true).query,
-            extend(true, {}, url.parse(PATH_2, true).query, QUERY),
+            assign(true, {}, url.parse(PATH_2, true).query, QUERY),
             'path and query params merging WITH overriding existing path params');
     },
 

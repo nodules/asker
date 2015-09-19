@@ -1,5 +1,5 @@
 var http = require('http'),
-    Vow = require('vow'),
+    vow = require('vow'),
     Form = require('formidable').IncomingForm,
     PORT = process.env.ASKER_TEST_PORT || 10080;
 
@@ -127,23 +127,23 @@ function httpTest(testFn) {
         var server;
 
         (function() {
-            var promise = Vow.promise();
+            var deferred = vow.defer();
 
             server = new TestServer(PORT++);
             server.listen(function() {
-                promise.fulfill(server);
+                deferred.resolve(server);
             });
 
-            return promise;
+            return deferred.promise();
         })()
         .then(function(server) {
-            var promise = Vow.promise();
+            var deferred = vow.defer();
 
             testFn(function() {
                 server.close(mochaDone);
             }, server);
 
-            return promise;
+            return deferred.promise();
         })
         .done();
     };
