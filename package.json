@@ -4,7 +4,11 @@
   "description": "http.request wrapper with request retries and http.Agent tuning",
   "main": "./lib/asker.js",
   "scripts": {
-    "test": "jshint --config .jshintrc lib test && jscs lib test && mocha -u exports -R spec && if [ ! -n \"$NO_COVERAGE\" ]; then istanbul cover _mocha -- -u exports -R dot test; fi"
+    "lint": "jshint --config .jshintrc lib test && jscs lib test",
+    "test": "mocha -u exports -R spec",
+    "coverage": "if [ ! -n \"$NO_COVERAGE\" ]; then istanbul cover _mocha -- -u exports -R dot test; fi",
+    "pretest": "npm run lint",
+    "posttest": "npm run coverage"
   },
   "repository": {
     "type": "git",
