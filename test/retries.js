@@ -66,7 +66,6 @@ module.exports = {
     }),
 
     'retries => custom => success 404-201' : httpTest(function(done, server) {
-
         server.addTest(function(req, res) {
             res.statusCode = 404;
             res.end();
@@ -84,11 +83,9 @@ module.exports = {
 
             done();
         });
-
     }),
 
     'retries => custom => fail 404-404' : httpTest(function(done, server) {
-
         server.addTest(function(req, res) {
             res.statusCode = 404;
             res.end();
@@ -104,11 +101,9 @@ module.exports = {
 
             done();
         });
-
     }),
 
     'retries => socket timeout => success' : httpTest(function(done, server) {
-
         server.addTest(function(req, res) {
             setTimeout(function() {
                 res.statusCode = 201;
@@ -129,50 +124,5 @@ module.exports = {
             done();
         });
 
-    }),
-
-    'onretry callback must be called when retry has been committed' : httpTest(function(done, server) {
-        var EXPECTED_RETRIES = 2,
-            counter = 0,
-
-            retriesHandler = function (reason, count) {
-                assert.strictEqual(reason.code, Asker.Error.CODES.UNEXPECTED_STATUS_CODE,
-                    'expected retry reason passed');
-
-                assert.ok(count <= EXPECTED_RETRIES, 'expected retries count');
-
-                counter++;
-            },
-
-            request = new Asker({ port : server.port, maxRetries : EXPECTED_RETRIES, onretry : retriesHandler },
-                function(error, response) {
-                    assert.strictEqual(error, null, 'request has been executed without errors');
-                    assert.strictEqual(response.data, null, 'response is empty');
-                    assert.strictEqual(counter, response.meta.retries.used,
-                        'onretry callback was called for each used request attempt');
-
-                    done();
-                });
-
-        assert.strictEqual(request._onretry, retriesHandler,
-            'retries handler setup is done');
-
-        server.addTest(function(req, res) {
-            // instigate for the retry of request
-            res.statusCode = 500;
-            res.end();
-        });
-
-        server.addTest(function(req, res) {
-            // instigate for the retry of request
-            res.statusCode = 500;
-            res.end();
-        });
-
-        server.addTest(function(req, res) {
-            res.end();
-        });
-
-        request.execute();
     })
 };

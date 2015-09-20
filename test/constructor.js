@@ -20,9 +20,6 @@ function testRequestWithoutOptions(request) {
     assert.deepEqual(request.options.headers, { 'accept-encoding' : 'gzip, *' },
         'headers contains "accept-encoding" only by default');
 
-    assert.strictEqual(typeof request._onretry, 'undefined',
-        'retry callback is undefined by default');
-
     assert.strictEqual(request.statusCodeFilter, Asker.prototype.statusCodeFilter,
         'default status code filter');
 
@@ -68,14 +65,11 @@ module.exports = {
             HEADERS = {
                 'x-strange-header' : 'hello'
             },
-            onretry = function() {},
-
             request = new Asker({
                 host : HOST,
                 port : PORT,
                 path : PATH,
                 headers : HEADERS,
-                onretry : onretry
             });
 
         assert.strictEqual(request.options.host, HOST,
@@ -94,9 +88,6 @@ module.exports = {
             request.options.headers,
             assign(true, {}, HEADERS, { 'accept-encoding' : 'gzip, *' }),
             'headers option setted properly');
-
-        assert.strictEqual(request._onretry, onretry,
-            '"onretry" callback setted properly');
     },
 
     'hostname option' : function() {
@@ -356,7 +347,6 @@ module.exports = {
                 headers : undefined,
                 query : undefined,
                 body : undefined,
-                onretry : undefined,
                 statusFilter : undefined,
                 queueTimeout : undefined,
                 agent : undefined,
