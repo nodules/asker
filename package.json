@@ -37,6 +37,7 @@
   ],
   "readmeFilename": "README.md",
   "dependencies": {
+    "asker-advanced-agent": "^0.1.0",
     "contimer": "^1.0.1",
     "object-assign": "^4.0.1",
     "retry": "^0.8.0",
