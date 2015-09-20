@@ -347,6 +347,8 @@ module.exports = {
                 method : 'GET',
                 bodyEncoding : 'string',
                 maxRetries : 0,
+                minRetriesTimeout : 300,
+                maxRetriesTimeout : Infinity,
                 timeout : 500,
                 allowGzip : true,
                 requestId : '',

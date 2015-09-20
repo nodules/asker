@@ -5,8 +5,9 @@
   "main": "./lib/asker.js",
   "scripts": {
     "lint": "jshint --config .jshintrc lib test && jscs lib test",
-    "test": "mocha -u exports -R spec",
+    "unit": "mocha -u exports -R spec",
     "coverage": "if [ ! -n \"$NO_COVERAGE\" ]; then istanbul cover _mocha -- -u exports -R dot test; fi",
+    "test": "npm run unit",
     "pretest": "npm run lint",
     "posttest": "npm run coverage"
   },
@@ -38,6 +39,7 @@
   "dependencies": {
     "contimer": "^1.0.1",
     "object-assign": "^4.0.1",
+    "retry": "^0.8.0",
     "terror": "^1.0.0",
     "unzip-response": "^1.0.0"
   },

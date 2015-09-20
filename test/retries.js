@@ -131,7 +131,7 @@ module.exports = {
 
     }),
 
-    'onretry callback must be called when retry has been commited' : httpTest(function(done, server) {
+    'onretry callback must be called when retry has been committed' : httpTest(function(done, server) {
         var EXPECTED_RETRIES = 2,
             counter = 0,
 
@@ -149,7 +149,7 @@ module.exports = {
                     assert.strictEqual(error, null, 'request has been executed without errors');
                     assert.strictEqual(response.data, null, 'response is empty');
                     assert.strictEqual(counter, response.meta.retries.used,
-                        'onretry callback was called for each used request attemt');
+                        'onretry callback was called for each used request attempt');
 
                     done();
                 });
