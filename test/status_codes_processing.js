@@ -2,8 +2,7 @@ var Asker = require('../lib/asker'),
     ask = Asker,
     httpTest = require('./lib/http'),
     assert = require('chai').assert,
-    RESPONSE = 'response ok',
-    REQUEST_ID = 'test';
+    RESPONSE = 'response ok';
 
 function filter(code) {
     return {
@@ -61,13 +60,13 @@ module.exports = {
     'default http status codes processing => 404' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
             res.statusCode = 404;
-            res.end('not found');
+            res.end(RESPONSE);
         });
 
         ask({ port : server.port }, function(error, response) {
             assert.strictEqual(error, null, 'no errors occured');
             assert.strictEqual(response.statusCode, 404, 'statusCode equals 404');
-            assert.strictEqual(response.data.toString('utf8'), 'not found', 'response is fulfilled');
+            assert.strictEqual(response.data.toString(), RESPONSE, 'response is fulfilled');
 
             done();
         });
@@ -76,7 +75,7 @@ module.exports = {
     'default http status codes processing => 500' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
             res.statusCode = 500;
-            res.end('internal server error');
+            res.end(RESPONSE);
         });
 
         ask({ port : server.port }, function(error) {
