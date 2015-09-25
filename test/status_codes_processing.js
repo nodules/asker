@@ -8,8 +8,7 @@ var Asker = require('../lib/asker'),
 function filter(code) {
     return {
         /* jshint bitwise:false */
-        accept : ~[200, 304, 404].indexOf(code),
-        isRetryAllowed : 400 > code || code > 499
+        accept : ~[200, 304, 404].indexOf(code)
     };
 }
 
@@ -44,23 +43,16 @@ module.exports = {
         });
     }),
 
-    'default http status codes processing => 304' : httpTest(function(done, server) {
+    'default http status codes processing => 301' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
-            res.statusCode = 304;
+            res.statusCode = 301;
             res.end();
         });
 
-        ask({ port : server.port, requestId : 'test' }, function(error) {
-            assert.strictEqual(error.code, Asker.Error.CODES.UNEXPECTED_STATUS_CODE, '304 is not valid by default');
-            assert.ok(
-                (new RegExp([
-                    'Unexpected status code {CODE:304} in the response for request ',
-                    REQUEST_ID,
-                    ' in \\d+~\\d+ ms http://localhost:',
-                    server.port,
-                    '/'
-                ].join(''))).test(error.message),
-                'error message fulfilled');
+        ask({ port : server.port, requestId : 'test' }, function(error, response) {
+            assert.strictEqual(error, null, 'no errors occured');
+            assert.strictEqual(response.statusCode, 301, 'statusCode equals 301');
+            assert.strictEqual(response.data, null, 'response is null');
 
             done();
         });
@@ -69,11 +61,13 @@ module.exports = {
     'default http status codes processing => 404' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
             res.statusCode = 404;
-            res.end();
+            res.end('not found');
         });
 
-        ask({ port : server.port }, function(error) {
-            assert.strictEqual(error.code, Asker.Error.CODES.UNEXPECTED_STATUS_CODE, '404 is not valid by default');
+        ask({ port : server.port }, function(error, response) {
+            assert.strictEqual(error, null, 'no errors occured');
+            assert.strictEqual(response.statusCode, 404, 'statusCode equals 404');
+            assert.strictEqual(response.data.toString('utf8'), 'not found', 'response is fulfilled');
 
             done();
         });
@@ -82,7 +76,7 @@ module.exports = {
     'default http status codes processing => 500' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
             res.statusCode = 500;
-            res.end();
+            res.end('internal server error');
         });
 
         ask({ port : server.port }, function(error) {

@@ -204,27 +204,32 @@ module.exports = {
         request.execute();
     }),
 
-    '#statusCodeFilter must return `accept` only for codes 200 and 201' : function() {
+    '#statusCodeFilter must return `accept` for codes 200 to 499' : function() {
         var request = new Asker();
 
-        assert.deepEqual(
-            request.statusCodeFilter(200),
-            { accept : true, isRetryAllowed : true },
-            'code 200 is accepted and retry is allowed for it');
+        assert.equal(
+            request.isNetworkError(200),
+            false,
+            'code 200 is accepted');
 
-        assert.deepEqual(
-            request.statusCodeFilter(201),
-            { accept : true, isRetryAllowed : true },
-            'code 201 is accepted and retry is allowed for it');
+        assert.equal(
+            request.isNetworkError(201),
+            false,
+            'code 201 is accepted');
 
-        assert.deepEqual(
-            request.statusCodeFilter(301),
-            { accept : false, isRetryAllowed : true },
-            'code 301 is not accepted and retry is allowed for it');
+        assert.equal(
+            request.isNetworkError(301),
+            false,
+            'code 301 is accepted');
 
-        assert.deepEqual(
-            request.statusCodeFilter(401),
-            { accept : false, isRetryAllowed : false },
-            'code 401 is not accepted and retry is not allowed for it');
+        assert.equal(
+            request.isNetworkError(401),
+            false,
+            'code 401 is accepted');
+
+        assert.equal(
+            request.isNetworkError(500),
+            true,
+            'code 500 is not accepted');
     }
 };
