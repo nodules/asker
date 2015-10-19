@@ -202,34 +202,5 @@ module.exports = {
         });
 
         request.execute();
-    }),
-
-    '#statusCodeFilter must return `accept` for codes 200 to 499' : function() {
-        var request = new Asker();
-
-        assert.equal(
-            request.isNetworkError(200),
-            false,
-            'code 200 is accepted');
-
-        assert.equal(
-            request.isNetworkError(201),
-            false,
-            'code 201 is accepted');
-
-        assert.equal(
-            request.isNetworkError(301),
-            false,
-            'code 301 is accepted');
-
-        assert.equal(
-            request.isNetworkError(401),
-            false,
-            'code 401 is accepted');
-
-        assert.equal(
-            request.isNetworkError(500),
-            true,
-            'code 500 is not accepted');
-    }
+    })
 };

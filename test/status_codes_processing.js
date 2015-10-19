@@ -4,11 +4,8 @@ var Asker = require('../lib/asker'),
     assert = require('chai').assert,
     RESPONSE = 'response ok';
 
-function filter(code) {
-    return {
-        /* jshint bitwise:false */
-        accept : ~[200, 304, 404].indexOf(code)
-    };
+function isNetworkError(code) {
+    return [200, 304, 404].indexOf(code) === -1;
 }
 
 module.exports = {
@@ -91,7 +88,7 @@ module.exports = {
             res.end(RESPONSE);
         });
 
-        ask({ port : server.port, statusFilter : filter }, function(error, response) {
+        ask({ port : server.port, isNetworkError : isNetworkError }, function(error, response) {
             assert.strictEqual(error, null, '200 is still allowed, even with custom statusFilter function');
             assert.strictEqual(response.statusCode, 200, 'statusCode equals 200');
             assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
@@ -106,7 +103,7 @@ module.exports = {
             res.end();
         });
 
-        ask({ port : server.port, statusFilter : filter }, function(error, response) {
+        ask({ port : server.port, isNetworkError : isNetworkError }, function(error, response) {
             assert.strictEqual(error, null, '304 is now allowed, according to statusFilter function');
             assert.strictEqual(response.statusCode, 304, 'statusCode equals 304');
             assert.strictEqual(response.data, null, '304 responses do not contain any body');
@@ -121,7 +118,7 @@ module.exports = {
             res.end(RESPONSE);
         });
 
-        ask({ port : server.port, statusFilter : filter }, function(error, response) {
+        ask({ port : server.port, isNetworkError : isNetworkError }, function(error, response) {
             assert.strictEqual(error, null, '404 is now allowed, according to statusFilter function');
             assert.strictEqual(response.statusCode, 404, 'statusCode equals 404');
             assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
