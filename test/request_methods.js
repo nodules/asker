@@ -79,19 +79,19 @@ module.exports = {
         assert.strictEqual(request.getTimers().total, DELTA, 'total time is computed right');
     },
 
-    '#execute starts "execution" timer' : function() {
-        var request = new Asker();
-
-        request.execute();
-
-        assert(contimer.stop(request._timerCtx, request.buildTimerId('execution')).time >= 0, '#execute starts "execution" timer');
-    },
-
     '#getTimers returns `NaN` if timers was not resolved' : function() {
         var request = new Asker();
 
         assert(isNaN(request.getTimers().total), '#getTimers().total is NaN');
         assert(isNaN(request.getTimers().network), '#getTimers().network is NaN');
+    },
+
+    'request execution starts "execution" timer' : function() {
+        var request = new Asker();
+
+        request._execute();
+
+        assert(contimer.stop(request._timerCtx, request.buildTimerId('execution')).time >= 0, '#execute starts "execution" timer');
     },
 
     'httpRequest `socket` event listener starts "network" timer' : httpTest(function(done, server) {
@@ -105,7 +105,7 @@ module.exports = {
             done();
         });
 
-        request.execute();
+        request._execute();
     }),
 
     '#getTimers returns undefined `network` while request is not completed' : httpTest(function(done, server) {
@@ -120,7 +120,7 @@ module.exports = {
             done();
         });
 
-        request.execute();
+        request._execute();
     }),
 
     'httpRequest `end` event listener stops the "network" timer' : httpTest(function(done, server) {
@@ -136,7 +136,7 @@ module.exports = {
             done();
         });
 
-        request.execute();
+        request._execute();
     }),
 
     '#formatTimestamp must return stringified human-readable result of #getTimers' : httpTest(function(done, server) {
@@ -167,7 +167,7 @@ module.exports = {
             done();
         });
 
-        request.execute();
+        request._execute();
     }),
 
     '#formatTimestamp interpolate undefined network time as "0"' : function() {
@@ -201,6 +201,6 @@ module.exports = {
             done();
         });
 
-        request.execute();
+        request._execute();
     })
 };
