@@ -340,6 +340,8 @@ module.exports = {
                 maxRetries : 0,
                 minRetriesTimeout : 300,
                 maxRetriesTimeout : Infinity,
+                isNetworkError : undefined,
+                isRetryAllowed : undefined,
                 timeout : 500,
                 allowGzip : true,
                 requestId : '',
@@ -347,7 +349,6 @@ module.exports = {
                 headers : undefined,
                 query : undefined,
                 body : undefined,
-                statusFilter : undefined,
                 queueTimeout : undefined,
                 agent : undefined,
                 port : undefined
