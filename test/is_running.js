@@ -21,7 +21,7 @@ module.exports = {
     },
 
     'sanity check for https client' : function(done) {
-        ask({ url : 'https://mail.yandex.ru/', timeout : 3000 }, function(error, response) {
+        ask({ url : 'https://www.yandex.com/', timeout : 3000 }, function(error, response) {
             assert.isNull(error);
             assert.strictEqual(response.statusCode, 200);
             assert.ok(response.data.length > 0);
