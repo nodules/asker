@@ -167,10 +167,25 @@ module.exports = {
             assert.strictEqual(complexParam.key1, bodyMultipart.complex_param.key1);
             assert.strictEqual(body.non_string_literal, String(bodyMultipart.non_string_literal));
             assert.strictEqual(files.file1.size, fileSize);
+
             assert.isArray(files.multiple_files);
             assert.strictEqual(files.multiple_files.length, bodyMultipart.multiple_files.length);
-            assert.strictEqual(files.multiple_files[0].name, bodyMultipart.multiple_files[0].filename);
-            assert.ok(isBuffersContentEqual(fs.readFileSync(files.multiple_files[1].path), bodyMultipart.multiple_files[1].data));
+
+            // @note: formidable doesn't guaranty order of multipart form processing, so convert them to collection
+            // @see https://github.com/felixge/node-formidable/issues/261
+            function filesToCollection(files) {
+                return files.reduce(function(res, file) {
+                    var filename = file.name || file.filename;
+                    res[filename] = {
+                        filename : filename,
+                        mime : file.type || file.mime,
+                        data : file.path ? fs.readFileSync(file.path) : file.data
+                    };
+                    return res;
+                }, {});
+            }
+            assert.deepEqual(filesToCollection(files.multiple_files), filesToCollection(bodyMultipart.multiple_files));
+
             assert.ok(isBuffersContentEqual(fs.readFileSync(files.file0.path), bodyMultipart.file0));
 
             res.statusCode = 200;
