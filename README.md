@@ -44,7 +44,7 @@ All parameters are optional.
 * `{Object} headers` – HTTP headers
 * `{Object} query` – Query parameters.
 * `{String} requestId=""` – Request identifier which is used in log messages.
-* `{*} body` – Request body. If it's an `Object`, `JSON.stringify` is applied for encoding, otherwise it's converted to `String`.
+* `{*} body` – Request body. Encoding method is set by `bodyEncoding` option.
 * `{String} bodyEncoding="string"` – Body encoding method (`string`, `json`, `urlencoded`, `multipart` or the one implemented by user). See ["Body encoding"](#body-encoding) for details.
 * `{Number} timeout=500` – Timeout from the moment when a socket was given by the pool manager.
 * `{Number} queueTimeout=timeout+50` – Timeout from the moment, when asker initiated the request. Useful if pool manager failed to provide a socket for any reason.
