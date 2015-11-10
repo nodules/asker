@@ -79,14 +79,6 @@ module.exports = {
         assert.strictEqual(request.getTimers().total, DELTA, 'total time is computed right');
     },
 
-    '#execute starts "execution" timer' : function() {
-        var request = new Asker();
-
-        request.execute();
-
-        assert(contimer.stop(request, request.buildTimerId('execution')).time >= 0, '#execute starts "execution" timer');
-    },
-
     '#getTimers returns `NaN` if timers was not resolved' : function() {
         var request = new Asker();
 
@@ -94,18 +86,26 @@ module.exports = {
         assert(isNaN(request.getTimers().network), '#getTimers().network is NaN');
     },
 
+    'request execution starts "execution" timer' : function() {
+        var request = new Asker();
+
+        request._execute();
+
+        assert(contimer.stop(request._timerCtx, request.buildTimerId('execution')).time >= 0, '#execute starts "execution" timer');
+    },
+
     'httpRequest `socket` event listener starts "network" timer' : httpTest(function(done, server) {
         var request = new Asker({ port : server.port });
 
         server.addTest(function(req, res) {
-            assert.strictEqual(typeof contimer.stop(request, request.buildTimerId('network')).time, 'number',
+            assert.strictEqual(typeof contimer.stop(request._timerCtx, request.buildTimerId('network')).time, 'number',
                 'network was started on request start');
 
             res.end();
             done();
         });
 
-        request.execute();
+        request._execute();
     }),
 
     '#getTimers returns undefined `network` while request is not completed' : httpTest(function(done, server) {
@@ -120,7 +120,7 @@ module.exports = {
             done();
         });
 
-        request.execute();
+        request._execute();
     }),
 
     'httpRequest `end` event listener stops the "network" timer' : httpTest(function(done, server) {
@@ -136,7 +136,7 @@ module.exports = {
             done();
         });
 
-        request.execute();
+        request._execute();
     }),
 
     '#formatTimestamp must return stringified human-readable result of #getTimers' : httpTest(function(done, server) {
@@ -167,7 +167,7 @@ module.exports = {
             done();
         });
 
-        request.execute();
+        request._execute();
     }),
 
     '#formatTimestamp interpolate undefined network time as "0"' : function() {
@@ -201,60 +201,6 @@ module.exports = {
             done();
         });
 
-        request.execute();
-    }),
-
-    '#resolve calls #done() without error and produce `response` object' : function(done) {
-        var request = new Asker({}, function() {
-                done();
-            }),
-            _done = request.done;
-
-        request.done = function(error, data) {
-            assert.strictEqual(error, null,
-                '#done() called without error');
-
-            assert.strictEqual(typeof data, 'object',
-                '#done() called with data object');
-
-            _done.apply(request, arguments);
-        };
-
-        request.resolve();
-    },
-
-    '#resolve produce `response.meta` using #getResponseMetaBase if the argument `meta` is not passed' : function(done) {
-        var request = new Asker({}, function(error, response) {
-            assert.deepEqual(response.meta, request.getResponseMetaBase(),
-                'response.meta is equal request.getResponseMetaBase() result');
-
-            done();
-        });
-
-        request.resolve();
-    },
-
-    '#statusCodeFilter must return `accept` only for codes 200 and 201' : function() {
-        var request = new Asker();
-
-        assert.deepEqual(
-            request.statusCodeFilter(200),
-            { accept : true, isRetryAllowed : true },
-            'code 200 is accepted and retry is allowed for it');
-
-        assert.deepEqual(
-            request.statusCodeFilter(201),
-            { accept : true, isRetryAllowed : true },
-            'code 201 is accepted and retry is allowed for it');
-
-        assert.deepEqual(
-            request.statusCodeFilter(301),
-            { accept : false, isRetryAllowed : true },
-            'code 301 is not accepted and retry is allowed for it');
-
-        assert.deepEqual(
-            request.statusCodeFilter(401),
-            { accept : false, isRetryAllowed : false },
-            'code 401 is not accepted and retry is not allowed for it');
-    }
+        request._execute();
+    })
 };

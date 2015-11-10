@@ -2,15 +2,10 @@ var Asker = require('../lib/asker'),
     ask = Asker,
     httpTest = require('./lib/http'),
     assert = require('chai').assert,
-    RESPONSE = 'response ok',
-    REQUEST_ID = 'test';
+    RESPONSE = 'response ok';
 
-function filter(code) {
-    return {
-        /* jshint bitwise:false */
-        accept : ~[200, 304, 404].indexOf(code),
-        isRetryAllowed : 400 > code || code > 499
-    };
+function isNetworkError(code) {
+    return [200, 304, 404].indexOf(code) === -1;
 }
 
 module.exports = {
@@ -44,23 +39,16 @@ module.exports = {
         });
     }),
 
-    'default http status codes processing => 304' : httpTest(function(done, server) {
+    'default http status codes processing => 301' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
-            res.statusCode = 304;
+            res.statusCode = 301;
             res.end();
         });
 
-        ask({ port : server.port, requestId : 'test' }, function(error) {
-            assert.strictEqual(error.code, Asker.Error.CODES.UNEXPECTED_STATUS_CODE, '304 is not valid by default');
-            assert.ok(
-                (new RegExp([
-                    'Unexpected status code {CODE:304} in the response for request ',
-                    REQUEST_ID,
-                    ' in \\d+~\\d+ ms http://localhost:',
-                    server.port,
-                    '/'
-                ].join(''))).test(error.message),
-                'error message fulfilled');
+        ask({ port : server.port, requestId : 'test' }, function(error, response) {
+            assert.strictEqual(error, null, 'no errors occured');
+            assert.strictEqual(response.statusCode, 301, 'statusCode equals 301');
+            assert.strictEqual(response.data, null, 'response is null');
 
             done();
         });
@@ -69,11 +57,13 @@ module.exports = {
     'default http status codes processing => 404' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
             res.statusCode = 404;
-            res.end();
+            res.end(RESPONSE);
         });
 
-        ask({ port : server.port }, function(error) {
-            assert.strictEqual(error.code, Asker.Error.CODES.UNEXPECTED_STATUS_CODE, '404 is not valid by default');
+        ask({ port : server.port }, function(error, response) {
+            assert.strictEqual(error, null, 'no errors occured');
+            assert.strictEqual(response.statusCode, 404, 'statusCode equals 404');
+            assert.strictEqual(response.data.toString(), RESPONSE, 'response is fulfilled');
 
             done();
         });
@@ -82,7 +72,7 @@ module.exports = {
     'default http status codes processing => 500' : httpTest(function(done, server) {
         server.addTest(function(req, res) {
             res.statusCode = 500;
-            res.end();
+            res.end(RESPONSE);
         });
 
         ask({ port : server.port }, function(error) {
@@ -98,7 +88,7 @@ module.exports = {
             res.end(RESPONSE);
         });
 
-        ask({ port : server.port, statusFilter : filter }, function(error, response) {
+        ask({ port : server.port, isNetworkError : isNetworkError }, function(error, response) {
             assert.strictEqual(error, null, '200 is still allowed, even with custom statusFilter function');
             assert.strictEqual(response.statusCode, 200, 'statusCode equals 200');
             assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');
@@ -113,7 +103,7 @@ module.exports = {
             res.end();
         });
 
-        ask({ port : server.port, statusFilter : filter }, function(error, response) {
+        ask({ port : server.port, isNetworkError : isNetworkError }, function(error, response) {
             assert.strictEqual(error, null, '304 is now allowed, according to statusFilter function');
             assert.strictEqual(response.statusCode, 304, 'statusCode equals 304');
             assert.strictEqual(response.data, null, '304 responses do not contain any body');
@@ -128,7 +118,7 @@ module.exports = {
             res.end(RESPONSE);
         });
 
-        ask({ port : server.port, statusFilter : filter }, function(error, response) {
+        ask({ port : server.port, isNetworkError : isNetworkError }, function(error, response) {
             assert.strictEqual(error, null, '404 is now allowed, according to statusFilter function');
             assert.strictEqual(response.statusCode, 404, 'statusCode equals 404');
             assert.strictEqual(response.data.toString(), RESPONSE, 'response is correct');

@@ -1,10 +1,15 @@
 {
   "name": "asker",
-  "version": "0.6.2",
+  "version": "1.0.0-alfa.2",
   "description": "http.request wrapper with request retries and http.Agent tuning",
   "main": "./lib/asker.js",
   "scripts": {
-    "test": "jshint --config .jshintrc lib test && jscs lib test && mocha -u exports -R spec && if [ ! -n \"$NO_COVERAGE\" ]; then istanbul cover _mocha -- -u exports -R dot test; fi"
+    "lint": "jshint --config .jshintrc lib test && jscs lib test",
+    "unit": "mocha -u exports -R spec",
+    "coverage": "if [ ! -n \"$NO_COVERAGE\" ]; then istanbul cover _mocha -- -u exports -R dot test; fi",
+    "test": "npm run unit",
+    "pretest": "npm run lint",
+    "posttest": "npm run coverage"
   },
   "repository": {
     "type": "git",
@@ -32,18 +37,21 @@
   ],
   "readmeFilename": "README.md",
   "dependencies": {
+    "asker-advanced-agent": "^0.1.0",
+    "contimer": "^1.0.1",
+    "object-assign": "^4.0.1",
+    "retry": "^0.8.0",
     "terror": "^1.0.0",
-    "extend": "2.0.0",
-    "contimer": "^1.0.1"
+    "unzip-response": "^1.0.0"
   },
   "devDependencies": {
-    "chai": "^1.10.0",
+    "chai": "^3.2.0",
     "formidable": "1.0.x",
     "istanbul": "*",
     "jscs": "1.4.x",
     "jshint": "2.1.x",
     "mocha": "^2.0.1",
-    "vow": "0.3.x"
+    "vow": "^0.4.0"
   },
   "engines": {
     "node": ">=0.8.21"

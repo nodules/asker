@@ -152,7 +152,7 @@ module.exports = {
     'test body encoder "urlencoded" => incorrect body type' : function() {
         assert.throw(function() {
             ask({ bodyEncoding : 'urlencoded', body : bodyText });
-        }, /Unexpect type ".*" of the option "body" in the body encoder "urlencoded". Expected \{Object\}/);
+        }, /Unexpected type ".*" of the option "body" in the body encoder "urlencoded". Expected \{Object\}/);
     },
 
     'body encoder "multipart"' : httpTest(function(done, server) {
@@ -194,7 +194,7 @@ module.exports = {
     'test body encoder "multipart" => incorrect body type' : function() {
         assert.throw(function() {
             ask({ bodyEncoding : 'multipart', body : bodyText });
-        }, /Unexpect type ".*" of the option "body" in the body encoder "multipart". Expected \{Object\}/);
+        }, /Unexpected type ".*" of the option "body" in the body encoder "multipart". Expected \{Object\}/);
     },
 
     'test body encoder => manually set content-type' : httpTest(function(done, server) {

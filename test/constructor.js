@@ -1,5 +1,5 @@
 var url = require('url'),
-    extend = require('extend'),
+    assign = require('object-assign'),
     Asker = require('../lib/asker'),
     assert = require('chai').assert;
 
@@ -19,9 +19,6 @@ function testRequestWithoutOptions(request) {
 
     assert.deepEqual(request.options.headers, { 'accept-encoding' : 'gzip, *' },
         'headers contains "accept-encoding" only by default');
-
-    assert.strictEqual(typeof request._onretry, 'undefined',
-        'retry callback is undefined by default');
 
     assert.strictEqual(request.statusCodeFilter, Asker.prototype.statusCodeFilter,
         'default status code filter');
@@ -68,14 +65,11 @@ module.exports = {
             HEADERS = {
                 'x-strange-header' : 'hello'
             },
-            onretry = function() {},
-
             request = new Asker({
                 host : HOST,
                 port : PORT,
                 path : PATH,
                 headers : HEADERS,
-                onretry : onretry
             });
 
         assert.strictEqual(request.options.host, HOST,
@@ -92,11 +86,8 @@ module.exports = {
 
         assert.deepEqual(
             request.options.headers,
-            extend(true, {}, HEADERS, { 'accept-encoding' : 'gzip, *' }),
+            assign(true, {}, HEADERS, { 'accept-encoding' : 'gzip, *' }),
             'headers option setted properly');
-
-        assert.strictEqual(request._onretry, onretry,
-            '"onretry" callback setted properly');
     },
 
     'hostname option' : function() {
@@ -142,10 +133,10 @@ module.exports = {
         assert.strictEqual(requestUrl.options.url, URL,
             '`url` option setted properly');
 
-        delete requestUrl.options.url;
-
-        assert.deepEqual(requestHPP.options, requestUrl.options,
-            'options parsed from `url` and passed manually are equal');
+        ['host', 'path', 'port', 'path'].forEach(function(field) {
+            assert.strictEqual(requestHPP.options[field], requestUrl.options[field],
+                'options parsed from url and passed manually has the same `' + field + '` field');
+        });
     },
 
     'url without protocol' : function() {
@@ -161,10 +152,10 @@ module.exports = {
                 url : HOST + PATH
             });
 
-        delete requestUrl.options.url;
-
-        assert.deepEqual(requestUrl.options, requestHostPath.options,
-            'parsed from url and directly passed options are equal');
+        ['host', 'path', 'port', 'path'].forEach(function(field) {
+            assert.strictEqual(requestUrl.options[field], requestHostPath.options[field],
+                'parsed from url and directly passed options has the same `' + field + '` field');
+        });
     },
 
     'default port for "http:" is 80' : function() {
@@ -199,12 +190,12 @@ module.exports = {
 
         assert.deepEqual(
             url.parse(requestMergedPath.options.path, true).query,
-            extend(true, {}, url.parse(PATH, true).query, QUERY),
+            assign(true, {}, url.parse(PATH, true).query, QUERY),
             'path and query params merging without overriding');
 
         assert.deepEqual(
             url.parse(requestOverridenQuery.options.path, true).query,
-            extend(true, {}, url.parse(PATH_2, true).query, QUERY),
+            assign(true, {}, url.parse(PATH_2, true).query, QUERY),
             'path and query params merging WITH overriding existing path params');
     },
 
@@ -347,6 +338,10 @@ module.exports = {
                 method : 'GET',
                 bodyEncoding : 'string',
                 maxRetries : 0,
+                minRetriesTimeout : 300,
+                maxRetriesTimeout : Infinity,
+                isNetworkError : undefined,
+                isRetryAllowed : undefined,
                 timeout : 500,
                 allowGzip : true,
                 requestId : '',
@@ -354,8 +349,6 @@ module.exports = {
                 headers : undefined,
                 query : undefined,
                 body : undefined,
-                onretry : undefined,
-                statusFilter : undefined,
                 queueTimeout : undefined,
                 agent : undefined,
                 port : undefined
