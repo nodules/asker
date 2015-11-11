@@ -8,11 +8,11 @@ var RESPONSE = 'response ok',
     RESPONSE_BUFFER = new Buffer(RESPONSE, 'utf8'),
     test = {
         'data': [
-            { 'id': 'AC',         'name': 'AC' },
-            { 'id': 'ACURA',      'name': 'Acura' },
+            { 'id': 'AC', 'name': 'AC' },
+            { 'id': 'ACURA', 'name': 'Acura' },
             { 'id': 'ALFA_ROMEO', 'name': 'Alfa Romeo' },
-            { 'id': 'ALPINA',     'name': 'Alpina' },
-            { 'id': 'ARO',        'name': 'Aro' }
+            { 'id': 'ALPINA', 'name': 'Alpina' },
+            { 'id': 'ARO', 'name': 'Aro' }
         ]
     };
 

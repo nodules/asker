@@ -13,11 +13,11 @@ var Asker = require('../lib/asker'),
     bodyText = 'plain text test',
     bodyStringify = {
         'data': [
-            { 'id': 'AC',         'name': 'AC' },
-            { 'id': 'ACURA',      'name': 'Acura' },
+            { 'id': 'AC', 'name': 'AC' },
+            { 'id': 'ACURA', 'name': 'Acura' },
             { 'id': 'ALFA_ROMEO', 'name': 'Alfa Romeo' },
-            { 'id': 'ALPINA',     'name': 'Alpina' },
-            { 'id': 'ARO',        'name': 'Aro' }
+            { 'id': 'ALPINA', 'name': 'Alpina' },
+            { 'id': 'ARO', 'name': 'Aro' }
         ]
     },
     bodyUrlencoded = {

@@ -69,7 +69,7 @@ module.exports = {
                 host: HOST,
                 port: PORT,
                 path: PATH,
-                headers: HEADERS,
+                headers: HEADERS
             });
 
         assert.strictEqual(request.options.host, HOST,
@@ -250,9 +250,9 @@ module.exports = {
 
     'lowercase methods names': function() {
         var request = new Asker({
-                method: 'post',
-                body: { test: 1 }
-            });
+            method: 'post',
+            body: { test: 1 }
+        });
 
         assert.instanceOf(request.options.body, Buffer,
             'request body buffer has been compiled');
