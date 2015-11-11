@@ -7,7 +7,7 @@ var Asker = require('../lib/asker'),
     ORIGINAL_RESPONSE = require('fs').readFileSync(__dirname + '/../lib/asker.js');
 
 module.exports = {
-    'asker must send gzip in the "accept-encoding" header' : httpTest(function(done, server) {
+    'asker must send gzip in the "accept-encoding" header': httpTest(function(done, server) {
         server.addTest(function(req, res) {
             assert.ok(req.headers['accept-encoding'].indexOf('gzip') > -1,
                 '"accept-encoding" header recieved and contains "gzip"');
@@ -18,10 +18,10 @@ module.exports = {
         });
 
         // @todo remove empty callback after fixing #54
-        ask({ port : server.port }, function() {});
+        ask({ port: server.port }, function() {});
     }),
 
-    'asker must deflate message body compressed with gzip' : httpTest(function(done, server) {
+    'asker must deflate message body compressed with gzip': httpTest(function(done, server) {
         server.addTest(function(req, res) {
             res.setHeader('content-encoding', 'gzip');
 
@@ -34,7 +34,7 @@ module.exports = {
             });
         });
 
-        ask({ port : server.port }, function(error, response) {
+        ask({ port: server.port }, function(error, response) {
             assert.strictEqual(response.data.toString(), ORIGINAL_RESPONSE.toString(),
                 'compressed response has been deflated as expected');
 
@@ -42,7 +42,7 @@ module.exports = {
         });
     }),
 
-    'asker must return deflating error if body deflate has been failed' : httpTest(function(done, server) {
+    'asker must return deflating error if body deflate has been failed': httpTest(function(done, server) {
         server.addTest(function(req, res) {
             res.setHeader('content-encoding', 'gzip');
 
@@ -55,7 +55,7 @@ module.exports = {
             });
         });
 
-        ask({ port : server.port }, function(error, response) {
+        ask({ port: server.port }, function(error, response) {
             assert.strictEqual(error.code, Asker.Error.CODES.GUNZIP_ERROR,
                 'response deflating must fail with GUNZIP_ERROR code');
 

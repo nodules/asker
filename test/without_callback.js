@@ -4,7 +4,7 @@ var Asker = require('../lib/asker'),
     assert = require('chai').assert;
 
 module.exports = {
-    'execute request without callback' : httpTest(function(done, server) {
+    'execute request without callback': httpTest(function(done, server) {
         var PATH = '/test';
 
         server.addTest(function(req, res) {
@@ -16,6 +16,6 @@ module.exports = {
             done();
         });
 
-        ask({ port : server.port, path : PATH });
+        ask({ port: server.port, path: PATH });
     })
 };

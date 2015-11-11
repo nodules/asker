@@ -3,7 +3,7 @@ var Asker = require('../lib/asker'),
     assert = require('chai').assert;
 
 module.exports = {
-    '#isRunning getter returns actual value of the private field _isRunning' : function(done) {
+    '#isRunning getter returns actual value of the private field _isRunning': function(done) {
         var request = new Asker();
 
         assert.strictEqual(request._isRunning, null,
@@ -20,8 +20,8 @@ module.exports = {
         done();
     },
 
-    'sanity check for https client' : function(done) {
-        ask({ url : 'https://www.yandex.com/', timeout : 3000 }, function(error, response) {
+    'sanity check for https client': function(done) {
+        ask({ url: 'https://www.yandex.com/', timeout: 3000 }, function(error, response) {
             assert.isNull(error);
             assert.strictEqual(response.statusCode, 200);
             assert.ok(response.data.length > 0);

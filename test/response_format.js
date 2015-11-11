@@ -4,7 +4,7 @@ var Asker = require('../lib/asker'),
     assert = require('chai').assert;
 
 module.exports = {
-    'check response format' : httpTest(function(done, server) {
+    'check response format': httpTest(function(done, server) {
 
         var RESPONSE = 'response ok';
 
@@ -13,7 +13,7 @@ module.exports = {
             res.end(RESPONSE);
         });
 
-        ask({ port : server.port }, function(error, response) {
+        ask({ port: server.port }, function(error, response) {
             assert.strictEqual(error, null, 'no errors occured');
 
             assert.strictEqual(response.data.toString(), RESPONSE, 'response data is present and is a correct string');
@@ -35,14 +35,14 @@ module.exports = {
 
     }),
 
-    'check empty response body' : httpTest(function(done, server) {
+    'check empty response body': httpTest(function(done, server) {
 
         server.addTest(function(req, res) {
             res.statusCode = 201;
             res.end('');
         });
 
-        ask({ port : server.port }, function(error, response) {
+        ask({ port: server.port }, function(error, response) {
             assert.strictEqual(error, null, 'no errors occured');
             assert.strictEqual(response.statusCode, 201, 'statusCode equals 201');
             assert.strictEqual(response.data, null, 'response is null');

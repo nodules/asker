@@ -4,7 +4,7 @@ var Asker = require('../lib/asker'),
     assert = require('chai').assert;
 
 function isNetworkError(code) {
-    return [200, 201].indexOf(code) === -1;
+    return [ 200, 201 ].indexOf(code) === -1;
 }
 
 function isRetryAllowed(error) {
@@ -15,7 +15,7 @@ function isRetryAllowed(error) {
 }
 
 module.exports = {
-    'retries => default => success 500-201' : httpTest(function(done, server) {
+    'retries => default => success 500-201': httpTest(function(done, server) {
 
         server.addTest(function(req, res) {
             res.statusCode = 500;
@@ -27,7 +27,7 @@ module.exports = {
             res.end();
         });
 
-        ask({ port : server.port, maxRetries : 1 }, function(error, response) {
+        ask({ port: server.port, maxRetries: 1 }, function(error, response) {
             assert.strictEqual(error, null, 'no errors');
             assert.strictEqual(response.meta.retries.used, 1, 'one retry was used');
             assert.strictEqual(response.meta.retries.limit, 1, 'retries limit is correct');
@@ -37,7 +37,7 @@ module.exports = {
 
     }),
 
-    'retries => default => fail 500-500' : httpTest(function(done, server) {
+    'retries => default => fail 500-500': httpTest(function(done, server) {
         var requestId = 'test';
 
         server.addTest(function(req, res) {
@@ -50,7 +50,7 @@ module.exports = {
             res.end();
         });
 
-        ask({ port : server.port, maxRetries : 1, requestId : requestId }, function(error) {
+        ask({ port: server.port, maxRetries: 1, requestId: requestId }, function(error) {
             assert.strictEqual(error.code, Asker.Error.CODES.RETRIES_LIMIT_EXCEEDED, 'retries limit exceeded');
 
             assert.ok(
@@ -68,7 +68,7 @@ module.exports = {
 
     }),
 
-    'retries => custom => success 404-201' : httpTest(function(done, server) {
+    'retries => custom => success 404-201': httpTest(function(done, server) {
         server.addTest(function(req, res) {
             res.statusCode = 404;
             res.end();
@@ -80,10 +80,10 @@ module.exports = {
         });
 
         var opts = {
-            port : server.port,
-            maxRetries : 1,
-            isNetworkError : isNetworkError,
-            isRetryAllowed : isRetryAllowed
+            port: server.port,
+            maxRetries: 1,
+            isNetworkError: isNetworkError,
+            isRetryAllowed: isRetryAllowed
         };
 
         ask(opts, function(error, response) {
@@ -95,7 +95,7 @@ module.exports = {
         });
     }),
 
-    'retries => custom => fail 404-404' : httpTest(function(done, server) {
+    'retries => custom => fail 404-404': httpTest(function(done, server) {
         server.addTest(function(req, res) {
             res.statusCode = 404;
             res.end();
@@ -107,10 +107,10 @@ module.exports = {
         });
 
         var opts = {
-            port : server.port,
-            maxRetries : 1,
-            isNetworkError : isNetworkError,
-            isRetryAllowed : isRetryAllowed
+            port: server.port,
+            maxRetries: 1,
+            isNetworkError: isNetworkError,
+            isRetryAllowed: isRetryAllowed
         };
 
         ask(opts, function(error) {
@@ -120,7 +120,7 @@ module.exports = {
         });
     }),
 
-    'retries => socket timeout => success' : httpTest(function(done, server) {
+    'retries => socket timeout => success': httpTest(function(done, server) {
         server.addTest(function(req, res) {
             setTimeout(function() {
                 res.statusCode = 201;
@@ -133,7 +133,12 @@ module.exports = {
             res.end();
         });
 
-        ask({ port : server.port, maxRetries : 1, timeout : 50, isRetryAllowed : isRetryAllowed }, function(error, response) {
+        ask({
+            port: server.port,
+            maxRetries: 1,
+            timeout: 50,
+            isRetryAllowed: isRetryAllowed
+        }, function(error, response) {
             assert.strictEqual(error, null, 'no errors');
             assert.strictEqual(response.meta.retries.used, 1, 'one retry was used');
             assert.strictEqual(response.meta.retries.limit, 1, 'retries limit is correct');
