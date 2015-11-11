@@ -302,29 +302,6 @@ module.exports = {
             'do not add "gzip" to existing "accept-encoding" header if header already contains "gzip"');
     },
 
-    'calculating queueTimeout if was not passed to constructor' : function() {
-        var request = new Asker();
-
-        assert.strictEqual(
-            request.options.queueTimeout,
-            request.options.timeout + request.QUEUE_TIMEOUT_DELTA,
-            'queueTimeout evaluated as timeout + QUEUE_TIMEOUT_DELTA');
-    },
-
-    'QUEUE_TIMEOUT_DELTA redifinition' : function() {
-        var request1 = new Asker(),
-            request2,
-            NEW_DELTA = 100,
-            DELTA_DIFF = 100 - Asker.prototype.QUEUE_TIMEOUT_DELTA;
-
-        Asker.prototype.QUEUE_TIMEOUT_DELTA = NEW_DELTA;
-
-        request2 = new Asker();
-
-        assert.strictEqual(request2.options.queueTimeout - request1.options.queueTimeout, DELTA_DIFF,
-            'QUEUE_TIMEOUT_DELTA change is ok');
-    },
-
     'DEFAULT_OPTIONS should be accessible as property of Asker' : function() {
         assert.strictEqual(typeof Asker.DEFAULT_OPTIONS, 'object',
             'DEFAULT_OPTIONS is accessible via Asker property');
@@ -342,6 +319,7 @@ module.exports = {
                 maxRetriesTimeout : Infinity,
                 isNetworkError : undefined,
                 isRetryAllowed : undefined,
+                queueTimeout : 50,
                 timeout : 500,
                 allowGzip : true,
                 requestId : '',
@@ -349,7 +327,6 @@ module.exports = {
                 headers : undefined,
                 query : undefined,
                 body : undefined,
-                queueTimeout : undefined,
                 agent : undefined,
                 port : undefined
             },

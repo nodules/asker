@@ -46,8 +46,8 @@ All parameters are optional.
 * `{String} requestId=""` – Request identifier which is used in log messages.
 * `{*} body` – Request body. Encoding method is set by `bodyEncoding` option.
 * `{String} bodyEncoding="string"` – Body encoding method (`string`, `json`, `urlencoded`, `multipart` or the one implemented by user). See ["Body encoding"](#body-encoding) for details.
+* `{Number} queueTimeout=50` – Timeout from the moment, when asker initiated the request. Useful if pool manager failed to provide a socket for any reason.
 * `{Number} timeout=500` – Timeout from the moment when a socket was given by the pool manager.
-* `{Number} queueTimeout=timeout+50` – Timeout from the moment, when asker initiated the request. Useful if pool manager failed to provide a socket for any reason.
 * `{Function} isNetworkError` – A function that checks whether the given status code should be treated as network error. See ["Response status codes processing"](#response-status-codes-processing) for details.
 * `{Number} maxRetries=0` – Maximum number of retries allowed for the request.
 * `{Number} minRetriesTimeout=300` – The number of milliseconds before starting the first retry if `maxRetries` is greater than 0.
