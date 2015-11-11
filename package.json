@@ -4,7 +4,7 @@
   "description": "http.request wrapper with request retries and http.Agent tuning",
   "main": "./lib/asker.js",
   "scripts": {
-    "lint": "jshint --config .jshintrc lib test && jscs lib test",
+    "lint": "eslint lib test && jscs lib test",
     "unit": "mocha -u exports -R spec",
     "coverage": "if [ ! -n \"$NO_COVERAGE\" ]; then istanbul cover _mocha -- -u exports -R dot test; fi",
     "test": "npm run unit",

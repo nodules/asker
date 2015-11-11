@@ -98,8 +98,8 @@ module.exports = {
         });
 
         var agent = {
-            name : 'faulty',
-            maxSockets : 1
+            name: 'faulty',
+            maxSockets: 1
         };
 
         ask({
