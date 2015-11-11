@@ -17,7 +17,7 @@ function testRequestWithoutOptions(request) {
             'option "' + option + '" value equal to default value');
     });
 
-    assert.deepEqual(request.options.headers, { 'accept-encoding' : 'gzip, *' },
+    assert.deepEqual(request.options.headers, { 'accept-encoding': 'gzip, *' },
         'headers contains "accept-encoding" only by default');
 
     assert.strictEqual(request.statusCodeFilter, Asker.prototype.statusCodeFilter,
@@ -34,12 +34,12 @@ function testRequestWithoutOptions(request) {
 }
 
 module.exports = {
-    'AskerError accessible via static field "Error"' : function() {
+    'AskerError accessible via static field "Error"': function() {
         assert.strictEqual(typeof Asker.Error, 'function',
             'AskerError constructor is accessible via Request.Error field');
     },
 
-    'without arguments' : function() {
+    'without arguments': function() {
         var request = new Asker();
 
         testRequestWithoutOptions(request);
@@ -48,7 +48,7 @@ module.exports = {
             'main callback is undefined by default');
     },
 
-    'minimal options' : function() {
+    'minimal options': function() {
         var callback = function() {},
             request = new Asker({}, callback);
 
@@ -58,18 +58,18 @@ module.exports = {
             'custom request callback');
     },
 
-    'common options' : function() {
+    'common options': function() {
         var HOST = 'yandex.com',
             PORT = 8080,
             PATH = '/index.html',
             HEADERS = {
-                'x-strange-header' : 'hello'
+                'x-strange-header': 'hello'
             },
             request = new Asker({
-                host : HOST,
-                port : PORT,
-                path : PATH,
-                headers : HEADERS,
+                host: HOST,
+                port: PORT,
+                path: PATH,
+                headers: HEADERS
             });
 
         assert.strictEqual(request.options.host, HOST,
@@ -86,11 +86,11 @@ module.exports = {
 
         assert.deepEqual(
             request.options.headers,
-            assign(true, {}, HEADERS, { 'accept-encoding' : 'gzip, *' }),
+            assign(true, {}, HEADERS, { 'accept-encoding': 'gzip, *' }),
             'headers option setted properly');
     },
 
-    'hostname option' : function() {
+    'hostname option': function() {
         var HOSTNAME = 'yandex.com',
             HOST = 'none',
             PORT = 8080,
@@ -98,10 +98,10 @@ module.exports = {
             URL = 'http://' + HOSTNAME + ':' + PORT + PATH,
 
             request = new Asker({
-                hostname : HOSTNAME,
-                host : HOST,
-                port : PORT,
-                path : PATH
+                hostname: HOSTNAME,
+                host: HOST,
+                port: PORT,
+                path: PATH
             });
 
         assert.strictEqual(request.options.host, HOST,
@@ -114,78 +114,78 @@ module.exports = {
             '`getUrl()` method uses `hostname` option');
     },
 
-    'url option' : function() {
+    'url option': function() {
         var HOST = 'yandex.com',
             PORT = 8080,
             PATH = '/index.html',
             URL = 'http://' + HOST + ':' + PORT + PATH,
 
             requestHPP = new Asker({
-                host : HOST,
-                port : PORT,
-                path : PATH
+                host: HOST,
+                port: PORT,
+                path: PATH
             }),
 
             requestUrl = new Asker({
-                url : URL
+                url: URL
             });
 
         assert.strictEqual(requestUrl.options.url, URL,
             '`url` option setted properly');
 
-        ['host', 'path', 'port', 'path'].forEach(function(field) {
+        [ 'host', 'path', 'port', 'path' ].forEach(function(field) {
             assert.strictEqual(requestHPP.options[field], requestUrl.options[field],
                 'options parsed from url and passed manually has the same `' + field + '` field');
         });
     },
 
-    'url without protocol' : function() {
+    'url without protocol': function() {
         var HOST = 'yandex.com',
             PATH = '/index.html',
 
             requestHostPath = new Asker({
-                host : HOST,
-                path : PATH
+                host: HOST,
+                path: PATH
             }),
 
             requestUrl = new Asker({
-                url : HOST + PATH
+                url: HOST + PATH
             });
 
-        ['host', 'path', 'port', 'path'].forEach(function(field) {
+        [ 'host', 'path', 'port', 'path' ].forEach(function(field) {
             assert.strictEqual(requestUrl.options[field], requestHostPath.options[field],
                 'parsed from url and directly passed options has the same `' + field + '` field');
         });
     },
 
-    'default port for "http:" is 80' : function() {
-        var request = new Asker({ url : 'http://yandex.ru/' });
+    'default port for "http:" is 80': function() {
+        var request = new Asker({ url: 'http://yandex.ru/' });
 
         assert.strictEqual(request.options.port, 80);
     },
 
-    'default port for "https:" is 443' : function() {
-        var request = new Asker({ url : 'https://yandex.ru/' });
+    'default port for "https:" is 443': function() {
+        var request = new Asker({ url: 'https://yandex.ru/' });
 
         assert.strictEqual(request.options.port, 443);
     },
 
-    'query and path args merging' : function() {
+    'query and path args merging': function() {
         var PATH = '/test?hello=1',
             PATH_2 = PATH + '&rainbow=bahamut',
             QUERY = {
-                rainbow : 'unicorn',
-                world : '2'
+                rainbow: 'unicorn',
+                world: '2'
             },
 
             requestMergedPath = new Asker({
-                path : PATH,
-                query : QUERY
+                path: PATH,
+                query: QUERY
             }),
 
             requestOverridenQuery = new Asker({
-                path : PATH_2,
-                query : QUERY
+                path: PATH_2,
+                query: QUERY
             });
 
         assert.deepEqual(
@@ -199,22 +199,22 @@ module.exports = {
             'path and query params merging WITH overriding existing path params');
     },
 
-    'request body building' : function() {
+    'request body building': function() {
         var QUERY_OBJECT = {
-                world : '2',
-                rainbow : 'unicorn'
+                world: '2',
+                rainbow: 'unicorn'
             },
 
             QUERY_STRING = 'world=2&rainbow=unicorn',
 
             requestQueryObject = new Asker({
-                body : QUERY_OBJECT,
-                bodyEncoding : 'json'
+                body: QUERY_OBJECT,
+                bodyEncoding: 'json'
             }),
 
             requestQueryString = new Asker({
-                body : QUERY_STRING,
-                bodyEncoding : 'string'
+                body: QUERY_STRING,
+                bodyEncoding: 'string'
             });
 
         assert.deepEqual(requestQueryObject.options.body, new Buffer(JSON.stringify(QUERY_OBJECT), 'utf8'),
@@ -229,14 +229,14 @@ module.exports = {
             'content-length header set to calculated value');
     },
 
-    'content-length is not calculated if passed in the options' : function() {
+    'content-length is not calculated if passed in the options': function() {
         var CONTENT_LENGTH = 10,
 
             request = new Asker({
-                headers : {
-                    'content-length' : CONTENT_LENGTH
+                headers: {
+                    'content-length': CONTENT_LENGTH
                 },
-                body : '1234567'
+                body: '1234567'
             });
 
         assert.strictEqual(request.options.headers['content-length'], CONTENT_LENGTH,
@@ -248,33 +248,33 @@ module.exports = {
             'content-length header value is not equal calculated value');
     },
 
-    'lowercase methods names' : function() {
+    'lowercase methods names': function() {
         var request = new Asker({
-                method : 'post',
-                body : { test : 1 }
-            });
+            method: 'post',
+            body: { test: 1 }
+        });
 
         assert.instanceOf(request.options.body, Buffer,
             'request body buffer has been compiled');
     },
 
-    'allow gzip option and header set' : function() {
+    'allow gzip option and header set': function() {
         var HEADERS = {
-                'accept-encoding' : 'application/json'
+                'accept-encoding': 'application/json'
             },
 
             request = new Asker({
-                allowGzip : true,
-                headers : HEADERS
+                allowGzip: true,
+                headers: HEADERS
             }),
 
             requestNoGzip = new Asker({
-                allowGzip : false
+                allowGzip: false
             }),
 
             requestNoGzipWithHeaders = new Asker({
-                allowGzip : false,
-                headers : HEADERS
+                allowGzip: false,
+                headers: HEADERS
             });
 
         assert.strictEqual(
@@ -289,12 +289,12 @@ module.exports = {
             'do not add "gzip" to existing "accept-encoding" header if gzip support disabled');
     },
 
-    'allow gzip option and header accept-encoding passed with gzip' : function() {
+    'allow gzip option and header accept-encoding passed with gzip': function() {
         var ACCEPT_ENCODING = 'gzip, application/json',
 
             request = new Asker({
-                headers : {
-                    'accept-encoding' : ACCEPT_ENCODING
+                headers: {
+                    'accept-encoding': ACCEPT_ENCODING
                 }
             });
 
@@ -302,33 +302,33 @@ module.exports = {
             'do not add "gzip" to existing "accept-encoding" header if header already contains "gzip"');
     },
 
-    'DEFAULT_OPTIONS should be accessible as property of Asker' : function() {
+    'DEFAULT_OPTIONS should be accessible as property of Asker': function() {
         assert.strictEqual(typeof Asker.DEFAULT_OPTIONS, 'object',
-            'DEFAULT_OPTIONS is accessible via Asker property');
+            'DEFAULT_OPTIONS are accessible via Asker property');
 
         assert.deepEqual(
             Asker.DEFAULT_OPTIONS,
             {
-                protocol : 'http:',
-                host : 'localhost',
-                path : '/',
-                method : 'GET',
-                bodyEncoding : 'string',
-                maxRetries : 0,
-                minRetriesTimeout : 300,
-                maxRetriesTimeout : Infinity,
-                isNetworkError : undefined,
-                isRetryAllowed : undefined,
-                queueTimeout : 50,
-                timeout : 500,
-                allowGzip : true,
-                requestId : '',
-                url : undefined,
-                headers : undefined,
-                query : undefined,
-                body : undefined,
-                agent : undefined,
-                port : undefined
+                protocol: 'http:',
+                host: 'localhost',
+                path: '/',
+                method: 'GET',
+                bodyEncoding: 'string',
+                maxRetries: 0,
+                minRetriesTimeout: 300,
+                maxRetriesTimeout: Infinity,
+                isNetworkError: undefined,
+                isRetryAllowed: undefined,
+                queueTimeout: 50,
+                timeout: 500,
+                allowGzip: true,
+                requestId: '',
+                url: undefined,
+                headers: undefined,
+                query: undefined,
+                body: undefined,
+                agent: undefined,
+                port: undefined
             },
             'DEFAULT_OPTIONS is ok');
     }

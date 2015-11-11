@@ -4,7 +4,7 @@ var Asker = require('../lib/asker'),
     assert = require('chai').assert;
 
 module.exports = {
-    'socket timeout => default' : httpTest(function(done, server) {
+    'socket timeout => default': httpTest(function(done, server) {
 
         server.addTest(function(req, res) {
             setTimeout(function() {
@@ -13,7 +13,7 @@ module.exports = {
             }, 1000);
         });
 
-        ask({ port : server.port }, function(error) {
+        ask({ port: server.port }, function(error) {
             assert.strictEqual(error.code, Asker.Error.CODES.SOCKET_TIMEOUT, 'socket timeout');
 
             done();
@@ -21,7 +21,7 @@ module.exports = {
 
     }),
 
-    'socket timeout => custom' : httpTest(function(done, server) {
+    'socket timeout => custom': httpTest(function(done, server) {
 
         server.addTest(function(req, res) {
             setTimeout(function() {
@@ -30,7 +30,7 @@ module.exports = {
             }, 200);
         });
 
-        ask({ port : server.port, timeout : 100 }, function(error) {
+        ask({ port: server.port, timeout: 100 }, function(error) {
             assert.strictEqual(error.code, Asker.Error.CODES.SOCKET_TIMEOUT, 'socket timeout');
 
             done();
@@ -38,7 +38,7 @@ module.exports = {
 
     }),
 
-    'queue timeout => default' : httpTest(function(done, server) {
+    'queue timeout => default': httpTest(function(done, server) {
 
         server.addTest(function(req, res) {
             setTimeout(function() {
@@ -55,33 +55,33 @@ module.exports = {
         });
 
         var agent = {
-            name : 'faulty',
-            maxSockets : 1
+            name: 'faulty',
+            maxSockets: 1
         };
 
         ask({
-                port : server.port,
-                agent : agent
-            },
-            function(error) {
-                assert.strictEqual(error, null, 'no errors for first request');
-            });
+            port: server.port,
+            agent: agent
+        },
+        function(error) {
+            assert.strictEqual(error, null, 'no errors for first request');
+        });
 
         setTimeout(function() {
             ask({
-                    port : server.port,
-                    agent : agent
-                },
-                function(error) {
-                    assert.strictEqual(error.code, Asker.Error.CODES.QUEUE_TIMEOUT, 'queue timeout');
+                port: server.port,
+                agent: agent
+            },
+            function(error) {
+                assert.strictEqual(error.code, Asker.Error.CODES.QUEUE_TIMEOUT, 'queue timeout');
 
-                    done();
-                });
+                done();
+            });
         }, 100);
 
     }),
 
-    'queue timeout => custom' : httpTest(function(done, server) {
+    'queue timeout => custom': httpTest(function(done, server) {
 
         server.addTest(function(req, res) {
             setTimeout(function() {
@@ -98,34 +98,34 @@ module.exports = {
         });
 
         var agent = {
-            name : 'faulty',
-            maxSockets : 1
+            name: 'faulty',
+            maxSockets: 1
         };
 
         ask({
-                port : server.port,
-                agent : agent
-            },
-            function(error) {
-                assert.strictEqual(error, null, 'no errors for first request');
-            });
+            port: server.port,
+            agent: agent
+        },
+        function(error) {
+            assert.strictEqual(error, null, 'no errors for first request');
+        });
 
         setTimeout(function() {
             ask({
-                    port : server.port,
-                    queueTimeout : 1000,
-                    agent : agent
-                },
-                function(error) {
-                    assert.strictEqual(error, null, 'still no errors');
+                port: server.port,
+                queueTimeout: 1000,
+                agent: agent
+            },
+            function(error) {
+                assert.strictEqual(error, null, 'still no errors');
 
-                    done();
-                });
+                done();
+            });
         }, 100);
 
     }),
 
-    'socket timeout must works correctly for chunked response (must not flash timeouts on first chunk)' : httpTest(function(done, server) {
+    'socket timeout must works correctly for chunked response (must not flash timeouts on first chunk)': httpTest(function(done, server) { // jscs: disable maximumLineLength
         server.addTest(function(req, res) {
             res.write('chunk1');
 
@@ -134,7 +134,7 @@ module.exports = {
             }, 300);
         });
 
-        ask({ port : server.port, timeout : 100 }, function(error, response) {
+        ask({ port: server.port, timeout: 100 }, function(error, response) {
             assert.strictEqual(error.code, Asker.Error.CODES.SOCKET_TIMEOUT,
                 'request has been failed due to socket timeout');
 

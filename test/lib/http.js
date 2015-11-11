@@ -34,7 +34,7 @@ TestServer.prototype.listen = function(callback) {
  * @returns {formidable.Form}
  */
 function buildForm() {
-    var form = new Form({ multiples : true });
+    var form = new Form({ multiples: true });
 
     form.onPart = function(part) {
         if (part.filename === undefined && part.mime === 'application/octet-stream') {
@@ -100,8 +100,8 @@ TestServer.prototype.addTest = function(testDispatcher) {
  */
 TestServer.prototype.buildResponse = function(isDone, message) {
     return JSON.stringify({
-        done : isDone,
-        message : message
+        done: isDone,
+        message: message
     });
 };
 
