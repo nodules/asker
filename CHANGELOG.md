@@ -17,7 +17,8 @@ Vladimir Varankin <nek.narqo@gmail.com>
 ### Other changes
 
 * use [asker-advanced-agent](http://npm.im/asker-advanced-agent)
-* use [node-retry](http://npm.im/node-retry)
+* use [retry](http://npm.im/retry)
+* use [unzip-response](http://npm.im/unzip-response)
 
 See MIGRATION.md for migration guide.
 
