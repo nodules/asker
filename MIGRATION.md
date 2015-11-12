@@ -13,7 +13,7 @@ and above, so it was removed.
 Those who use Node.js 0.10 and don't use per server agent tuning should set `globalAgent.maxSockets` to
 1024 (or any acceptable value) themselves.
 
-See [#106](https://gtihub.com/nodules/asker/issues/106) for discussion.
+See [#106](https://github.com/nodules/asker/issues/106) for discussion.
 
 2\. `statusFilter` option has been split into two separate functions:
 
@@ -56,14 +56,53 @@ ask({ host: 'yandex.com', isNetworkError: isNetworkError, isRetryAllowed: isRetr
 
 See [#93](https://github.com/nodules/asker/issues/93) for discussion.
 
-3\. `onretry` option has been removed.
+3\. `queueTimeout` option has been reworked.
+
+From now on `queueTimeout` sets the exact amount of time, socket has to be assigned to the request and it's
+default value is set to 50 ms. In previous versions the exact value was calculated as a sum of the value
+of `timeout` plus `QUEUE_TIMEOUT_DELTA`.
+
+For asker before 1.0.0:
+
+```js
+var ask = require('asker');
+
+ask({
+    timeout: 10  // the value of `queueTimeout = timeout + 50`
+}, callback);
+```
+
+The code above should be changed to:
+
+```js
+var ask = require('asker');
+
+ask({
+    timeout: 10,
+    queueTimeout: 60
+}, callback);
+```
+
+4\. `onretry` option has been removed.
 
 The option was not widely used, so it was removed.
 
-4\. `agent.persistent` option has been removed.
+5\. `agent.persistent` option has been removed.
 
 The option was not widely used, so it was removed.
+
+6\. Instantiation of `Asker` internal class from the user code has been marked as deprecated.
+
+It is still technically possible to use asker as a class, e.g.
+
+```js
+var Asker = require('asker');
+var ask = new Asker({  });
+```
+
+but since version 1.0.0 this method is marked as deprecated. Most methods of `Asker` class
+have been marked as private. It's unlikely for the end user to use them from the code.
 
 ---
 
-See CHANGELOG for the full list of changes introduced in 1.0.0.
+See [CHANGELOG.md](https://github.com/nodules/asker/blob/1.0.0/CHANGELOG) for the full list of changes introduced in 1.0.0.
