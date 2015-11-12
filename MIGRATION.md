@@ -105,4 +105,4 @@ have been marked as private. It's unlikely for the end user to use them from the
 
 ---
 
-See [CHANGELOG.md](https://github.com/nodules/asker/blob/1.0.0/CHANGELOG) for the full list of changes introduced in 1.0.0.
+See [CHANGELOG.md](https://github.com/nodules/asker/blob/1.0.0/CHANGELOG.md) for the full list of changes introduced in 1.0.0.
