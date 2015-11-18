@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1 - 2015-11-18
+
+Vladimir Varankin <nek.narqo@gmail.com>
+
+* Accept any `http` / `https` options. The bug was introduced in 1.0.0 [#118](https://github.com/nodules/asker/pull/118)
+
 ## 1.0.0 - 2015-11-12
 
 Vladimir Varankin <nek.narqo@gmail.com>
