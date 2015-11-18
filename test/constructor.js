@@ -316,6 +316,19 @@ module.exports = {
         }, request);
     },
 
+    'passing "undefined" option should not rewrite default value': function() {
+        var request = new Asker({
+            host: undefined,
+            port: undefined,
+            path: undefined,
+            method: undefined
+        });
+
+        [ 'host', 'port', 'path', 'method' ].forEach(function(k) {
+            assert.isDefined(this.options[k], '"' + k + '" option was rewritten by undefined value');
+        }, request);
+    },
+
     'DEFAULT_OPTIONS should be accessible as property of Asker': function() {
         assert.strictEqual(typeof Asker.DEFAULT_OPTIONS, 'object',
             'DEFAULT_OPTIONS are accessible via Asker property');
