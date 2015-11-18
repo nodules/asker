@@ -302,6 +302,33 @@ module.exports = {
             'do not add "gzip" to existing "accept-encoding" header if header already contains "gzip"');
     },
 
+    'allow any options of http/https modules to be passed': function() {
+        var options = {
+                auth: 'myuser:mypassword',
+                socketPath: '/run/my.sock',
+                family: '4',
+                ca: '---my cert'
+            },
+            request = new Asker(options);
+
+        Object.keys(options).forEach(function(k) {
+            assert.strictEqual(options[k], this.options[k]);
+        }, request);
+    },
+
+    'passing "undefined" option should not rewrite default value': function() {
+        var request = new Asker({
+            host: undefined,
+            port: undefined,
+            path: undefined,
+            method: undefined
+        });
+
+        [ 'host', 'port', 'path', 'method' ].forEach(function(k) {
+            assert.isDefined(this.options[k], '"' + k + '" option was rewritten by undefined value');
+        }, request);
+    },
+
     'DEFAULT_OPTIONS should be accessible as property of Asker': function() {
         assert.strictEqual(typeof Asker.DEFAULT_OPTIONS, 'object',
             'DEFAULT_OPTIONS are accessible via Asker property');
