@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.2 - 2015-11-19
+
+Vladimir Varankin <nek.narqo@gmail.com>
+
+* TLS options doesn't work with custom agent in Node.js < 0.12 [#119](https://github.com/nodules/asker/issues/119)
+* Pass option `rejectUnauthorized` to https module [#86](https://github.com/nodules/asker/issues/86)
+* Add unit tests for https functionality [#114](https://github.com/nodules/asker/issues/114)
+
 ## 1.0.1 - 2015-11-18
 
 Vladimir Varankin <nek.narqo@gmail.com>
