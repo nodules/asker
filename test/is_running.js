@@ -1,5 +1,4 @@
 var Asker = require('../lib/asker'),
-    ask = Asker,
     assert = require('chai').assert;
 
 module.exports = {
@@ -18,15 +17,5 @@ module.exports = {
             'value returned by isRunning getter equals private field value');
 
         done();
-    },
-
-    'sanity check for https client': function(done) {
-        ask({ url: 'https://www.yandex.com/', timeout: 3000 }, function(error, response) {
-            assert.isNull(error);
-            assert.strictEqual(response.statusCode, 200);
-            assert.ok(response.data.length > 0);
-
-            done();
-        });
     }
 };
