@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.3 - 2015-11-24
+
+Vladimir Varankin <nek.narqo@gmail.com>
+
+Version 1.0.2 has been unpublished due to internal needs.
+
+* Internal package fixes
+
 ## 1.0.2 - 2015-11-19
 
 Vladimir Varankin <nek.narqo@gmail.com>
