@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.4 - 2016-02-16
+
+Vladimir Varankin <nek.narqo@gmail.com>
+
+* Gzip response might ignore retry when start response buffering [#121](https://github.com/nodules/asker/pull/121)
+
 ## 1.0.3 - 2015-11-24
 
 Vladimir Varankin <nek.narqo@gmail.com>
