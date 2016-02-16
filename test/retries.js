@@ -1,5 +1,6 @@
 var Asker = require('../lib/asker'),
     ask = Asker,
+    zlib = require('zlib'),
     httpTest = require('./lib/http'),
     assert = require('chai').assert;
 
@@ -124,6 +125,49 @@ module.exports = {
         server.addTest(function(req, res) {
             setTimeout(function() {
                 res.statusCode = 201;
+                res.end();
+            }, 200);
+        });
+
+        server.addTest(function(req, res) {
+            res.statusCode = 201;
+            res.end();
+        });
+
+        ask({
+            port: server.port,
+            maxRetries: 1,
+            timeout: 50,
+            isRetryAllowed: isRetryAllowed
+        }, function(error, response) {
+            assert.strictEqual(error, null, 'no errors');
+            assert.strictEqual(response.meta.retries.used, 1, 'one retry was used');
+            assert.strictEqual(response.meta.retries.limit, 1, 'retries limit is correct');
+
+            done();
+        });
+
+    }),
+
+    'retries => start gzip response => socket timeout => success': httpTest(function(done, server) {
+        server.addTest(function(req, res) {
+            res.setHeader('content-encoding', 'gzip');
+            res.statusCode = 201;
+
+            var RESPONSE = 'this is gzip response';
+            var RESPONSE_ZLIB =
+            zlib.gzip(RESPONSE, function(error, buf) {
+                if (error) {
+                    throw error;
+                } else {
+                    RESPONSE_ZLIB = buf;
+                    // write first chunk to got Z_BUF_ERROR at response "error" event after abort
+                    res.write(RESPONSE_ZLIB.slice(0, 5));
+                }
+            });
+
+            setTimeout(function() {
+                res.write(RESPONSE_ZLIB.slice(5));
                 res.end();
             }, 200);
         });
