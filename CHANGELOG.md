@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.5 - 2016-03-08
+
+Phillip Kovalev <twilightfeel@gmail.com>
+
+* Stop buffering a response on request abort [#123](https://github.com/nodules/asker/pull/123)
+
 ## 1.0.4 - 2016-02-16
 
 Vladimir Varankin <nek.narqo@gmail.com>
