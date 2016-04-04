@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0 - 2016-04-04
+
+Vladimir Varankin <nek.narqo@gmail.com>
+
+* Add timers to error data for custom usage [#124](https://github.com/nodules/asker/issues/124)
+
 ## 1.0.5 - 2016-03-08
 
 Phillip Kovalev <twilightfeel@gmail.com>
