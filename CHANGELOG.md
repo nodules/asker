@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1 - 2016-04-06
+
+Vladimir Varankin <nek.narqo@gmail.com>
+
+* Pack only essential files [#126](https://github.com/nodules/asker/pull/126)
+
 ## 1.1.0 - 2016-04-04
 
 Vladimir Varankin <nek.narqo@gmail.com>
