@@ -35,6 +35,10 @@
       "url": "http://github.com/nodules/asker/raw/master/LICENSE"
     }
   ],
+  "files": [
+      "lib",
+      "*.md"
+  ],
   "readmeFilename": "README.md",
   "dependencies": {
     "asker-advanced-agent": "^0.1.0",
