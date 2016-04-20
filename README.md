@@ -82,7 +82,7 @@ which determines whether this response code is acceptable:
 
 * `{Number} statusCode` – A response status code provided by `asker`.
 
-The function must return `false` if particular `statusCode` should be treated as network error. By default all status
+The function must return `true` if particular `statusCode` should be treated as network error. By default all status
 codes less than 500 are allowed.
 
 Note, that result must be returned ASAP, because execution time of the filter WILL affect request timeouts.
