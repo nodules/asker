@@ -199,6 +199,44 @@ module.exports = {
             'path and query params merging WITH overriding existing path params');
     },
 
+    'query undefined params removed': function() {
+        var PATH = '/test?hello=1',
+            QUERY = {
+                rainbow: 'unicorn',
+                world: undefined
+            },
+
+            requestQueryObject = new Asker({
+                path: PATH,
+                query: QUERY,
+                removeUndefinedParams: true
+            });
+
+        assert.notProperty(
+            requestQueryObject.options.query,
+            'world',
+            'query does not contains undefined param');
+    },
+
+    'query undefined params keeped': function() {
+        var PATH = '/test?hello=1',
+            QUERY = {
+                rainbow: 'unicorn',
+                world: undefined
+            },
+
+            requestQueryObject = new Asker({
+                path: PATH,
+                query: QUERY,
+                removeUndefinedParams: false
+            });
+
+        assert.property(
+            requestQueryObject.options.query,
+            'world',
+            'query contains undefined param');
+    },
+
     'request body building': function() {
         var QUERY_OBJECT = {
                 world: '2',
@@ -355,7 +393,8 @@ module.exports = {
                 query: undefined,
                 body: undefined,
                 agent: undefined,
-                port: undefined
+                port: undefined,
+                removeUndefinedParams: false
             },
             'DEFAULT_OPTIONS is ok');
     }
