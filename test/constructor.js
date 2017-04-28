@@ -355,7 +355,8 @@ module.exports = {
                 query: undefined,
                 body: undefined,
                 agent: undefined,
-                port: undefined
+                port: undefined,
+                timerIdPrefix: undefined
             },
             'DEFAULT_OPTIONS is ok');
     }
