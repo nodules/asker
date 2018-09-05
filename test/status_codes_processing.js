@@ -72,11 +72,13 @@ module.exports = {
     'default http status codes processing => 500': httpTest(function(done, server) {
         server.addTest(function(req, res) {
             res.statusCode = 500;
+            res.statusMessage = 'Status Message';
             res.end(RESPONSE);
         });
 
         ask({ port: server.port }, function(error) {
             assert.strictEqual(error.code, Asker.Error.CODES.UNEXPECTED_STATUS_CODE, '500 is not valid by default');
+            assert.strictEqual(error.data.statusMessage, 'Status Message');
 
             done();
         });
