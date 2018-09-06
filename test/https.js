@@ -110,12 +110,22 @@ module.exports = {
         });
     }),
 
-    'https: sanity check': function(done) {
-        ask({ url: 'https://www.yandex.com/', timeout: 3000 }, function(error, response) {
+    'https: sanity check': httpsTest(function(done, server) {
+        server.addTest(function(req, res) {
+            res.end(RESPONSE);
+        });
+
+        var opts = {
+            protocol: server.protocol,
+            port: server.port,
+            ca: server.rootCA
+        };
+
+        ask(opts, function(error, response) {
             assert.isNull(error);
             assert.strictEqual(response.statusCode, 200);
             assert.ok(response.data.length > 0);
             done();
         });
-    }
+    })
 };
