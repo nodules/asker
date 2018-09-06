@@ -1,5 +1,9 @@
 # Migration
 
+## 2.0.0
+
+There should be no reason for any code changes with the new asker 2. Just use Node.js 0.12+.
+
 ## 1.0.0
 
 Version 1.0.0 introduced the following breaking changes:

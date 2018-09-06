@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0 - 2018-08-06
+
+Denis Malinochkin <dmalinochkin@rambler.ru>
+
+* Provide original status message and body to the NetworkError [#131](https://github.com/nodules/asker/pull/131)
+
 ## 1.1.1 - 2016-04-06
 
 Vladimir Varankin <nek.narqo@gmail.com>
